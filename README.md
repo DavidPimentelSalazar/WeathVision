@@ -20,3 +20,4 @@ Aquí encontrarás la licencia sobre la aplicación: [LICENCIA DE  APLICACIÓN.p
 ### Contacto
 Para dudas o consultas, me puedes contactar por correo: pimentelsalazardavid@gmail.com.
 
+![image](https://github.com/user-attachments/assets/4e74a887-fdc7-4d1b-9547-53f4be9cd16b)
