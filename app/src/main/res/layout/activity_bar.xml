@@ -1,0 +1,40 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BarActivity">
+
+    <!-- BottomAppBar -->
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@color/black"
+        app:fabAlignmentMode="center"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="50dp"
+        app:layout_anchor="@+id/bottomNavigationView"
+        app:layout_anchorGravity="center" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_gravity="bottom"
+        android:background="@color/violet"
+        app:labelVisibilityMode="labeled"
+        app:layout_anchorGravity="center"
+        app:menu="@menu/bottom_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

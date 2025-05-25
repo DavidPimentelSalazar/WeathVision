@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">WeathVision</string>
+
+    <string-array name="categorias_trabajo">
+        <item>Estudiante</item>
+        <item>Freelance</item>
+        <item>Emprendedor</item>
+        <item>Sin empleo</item>
+        <item>Autónomo</item>
+        <item>Cuenta ajena</item>
+        <item>Practicante</item>
+        <item>Jubilado joven</item>
+        <item>Otros ingresos</item>
+        <item>Personalizado</item>
+        <item>Estudiante</item>
+        <item>Freelance</item>
+        <item>Emprendedor</item>
+        <item>Sin empleo</item>
+        <item>Autónomo</item>
+        <item>Cuenta ajena</item>
+        <item>Practicante</item>
+        <item>Jubilado joven</item>
+        <item>Otros ingresos</item>
+        <item>Personalizado</item>
+    </string-array>
+
+    <string-array name="idiomas">
+        <item>Español</item>
+        <item>Inglés</item>
+    </string-array>
+</resources>

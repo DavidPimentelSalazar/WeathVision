@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/background_2"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".UserNew.StartFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Empieza introducciendo alguna meta como objetivo en base a tu patrimonio actual "
+        android:textColor="@color/white"
+        android:textSize="25dp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="(Todo estos datos los podrás modificar mas adelante)"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textStyle="italic" />
+
+
+</LinearLayout>

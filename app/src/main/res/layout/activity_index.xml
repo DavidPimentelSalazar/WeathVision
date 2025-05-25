@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    tools:context=".IndexActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WeathVision"
+        android:textStyle="italic"
+        android:textSize="30dp"
+        android:textColor="@color/white"
+        android:layout_margin="30dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bars"
+        android:layout_marginTop="-150dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Titulo Principal Para Iniciar"
+        android:textColor="@color/white"
+        android:textSize="45dp"
+        android:textStyle="bold"
+        android:layout_marginTop="-150dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/getStarted"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:text="Get Started"
+            android:background="@drawable/background_oblique"
+            android:layout_marginEnd="50dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle_button"
+            android:layout_marginStart="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle_button"
+            android:layout_marginStart="20dp"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
