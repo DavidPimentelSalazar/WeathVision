@@ -29,16 +29,27 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.context = context;
         this.transacciones = transacciones;
         this.categoryImageMap = new HashMap<>();
-        // Populate the map with category names and their image paths
+        updateCategorias(categorias); // Initialize with provided categories
+    }
+
+    // Method to update categories dynamically
+    public void updateCategorias(List<Categoria> categorias) {
+        categoryImageMap.clear();
         for (Categoria categoria : categorias) {
-            categoryImageMap.put(categoria.getNombre(), categoria.getImagen());
+            String categoryName = categoria.getNombre() != null ? categoria.getNombre().trim().toLowerCase() : "";
+            String imagePath = categoria.getImagen() != null ? categoria.getImagen() : "";
+            categoryImageMap.put(categoryName, imagePath);
+            Log.d(TAG, "Mapped category: " + categoryName + " -> " + imagePath);
         }
+        Log.d(TAG, "categoryImageMap size: " + categoryImageMap.size());
+        notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.transaction_item, parent, false);
+        Log.d(TAG, "Inflated transaction_item layout: " + (view != null));
         return new ViewHolder(view);
     }
 
@@ -47,6 +58,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         Transaction transaction = transacciones.get(position);
         Log.d(TAG, "Binding transaction: tipo=" + transaction.getTipo() + ", monto=" + transaction.getMonto() + ", categoria=" + transaction.getCategoria());
 
+        // Set text views
         holder.descripcion.setText(transaction.getCategoria() != null ? transaction.getCategoria() : "Sin categoría");
         holder.monto.setText(String.format("%.2f€", transaction.getMonto()));
         holder.fecha.setText(transaction.getFecha() != null ? transaction.getFecha() : "");
@@ -58,23 +70,33 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.monto.setTextColor(ContextCompat.getColor(context, R.color.red));
         } else {
             Log.w(TAG, "Unknown transaction tipo: " + transaction.getTipo());
-            holder.monto.setTextColor(ContextCompat.getColor(context, android.R.color.black)); // Default color
+            holder.monto.setTextColor(ContextCompat.getColor(context, android.R.color.black));
         }
 
         // Load the image based on the category
-        String imagePath = categoryImageMap.get(transaction.getCategoria());
-        if (imagePath != null) {
-            int resId = context.getResources().getIdentifier(
-                    imagePath.replace("@drawable/", "").replace(".png", ""),
-                    "drawable",
-                    context.getPackageName());
+        String categoryName = transaction.getCategoria() != null ? transaction.getCategoria().trim().toLowerCase() : "";
+        if (categoryName.isEmpty()) {
+            Log.w(TAG, "Transaction has no category: " + transaction.getMonto());
+            holder.icon.setImageResource(android.R.drawable.ic_menu_gallery);
+            return;
+        }
+
+        String imagePath = categoryImageMap.get(categoryName);
+        if (imagePath != null && !imagePath.isEmpty()) {
+            String resourceName = imagePath.replace("@drawable/", "")
+                    .replace(".png", "")
+                    .replace(".jpg", "")
+                    .trim();
+            int resId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
             if (resId != 0) {
                 holder.icon.setImageResource(resId);
             } else {
-                holder.icon.setImageResource(android.R.drawable.ic_menu_gallery); // Fallback image
+                Log.w(TAG, "Drawable resource not found for: " + resourceName);
+                holder.icon.setImageResource(android.R.drawable.ic_menu_gallery);
             }
         } else {
-            holder.icon.setImageResource(android.R.drawable.ic_menu_gallery); // Fallback image
+            Log.w(TAG, "No image path found for category: " + categoryName);
+            holder.icon.setImageResource(android.R.drawable.ic_menu_gallery);
         }
     }
 
@@ -94,7 +116,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             descripcion = itemView.findViewById(R.id.text_categoria);
             monto = itemView.findViewById(R.id.text_monto);
             fecha = itemView.findViewById(R.id.text_fecha);
-            icon = itemView.findViewById(R.id.icon); // Reference to the ImageView
+            icon = itemView.findViewById(R.id.icon);
+            Log.d(TAG, "ViewHolder initialized: icon=" + (icon != null) + ", descripcion=" + (descripcion != null));
         }
     }
 }

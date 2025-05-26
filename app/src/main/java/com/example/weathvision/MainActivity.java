@@ -135,7 +135,10 @@ public class MainActivity extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     categorias.clear();
                     categorias.addAll(response.body());
-                    adapter.notifyDataSetChanged(); // Notify adapter to refresh with new category data
+                    for (Categoria c : categorias) {
+                        Log.d(TAG, "Category: nombre=" + c.getNombre() + ", imagen=" + c.getImagen());
+                    }
+                    adapter.updateCategorias(categorias); // Update adapter with new categories
                     Log.d(TAG, "Loaded " + categorias.size() + " categories");
                 } else {
                     Log.w(TAG, "Failed to load categories, response code: " + response.code());
