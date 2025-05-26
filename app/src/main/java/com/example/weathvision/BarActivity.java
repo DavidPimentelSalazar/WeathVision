@@ -42,7 +42,7 @@ public class BarActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.casa) {
                 fragment = new Estadisticas();
             } else if (item.getItemId() == R.id.alertas) {
-               // fragment = new AlertFragment();
+                fragment = new Categorias();
             } else if (item.getItemId() == R.id.ia) {
                // fragment = new IAFragment();
             } else if (item.getItemId() == R.id.ajustes) {

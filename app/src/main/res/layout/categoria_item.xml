@@ -7,7 +7,7 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/imagen"
+        android:id="@+id/imagenCategoria"
         android:layout_width="50dp"
         android:layout_gravity="center"
         android:layout_height="50dp"
@@ -16,7 +16,7 @@
         android:background="@drawable/background_categories"/>
 
     <TextView
-        android:id="@+id/titulo"
+        android:id="@+id/tituloCategoria"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
