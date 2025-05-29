@@ -3,9 +3,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_transparent">#81FFFFFF</color>
+    <color name="grey_trasnparent">#81BABABA</color>
     <color name="red">#81FF0000</color>
     <color name="green">#8A00FF46</color>
     <color name="violet">#450373</color>
+    <color name="transparente">#00450373</color>
+
 
 
 </resources>

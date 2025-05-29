@@ -6,7 +6,8 @@ import java.io.Serializable;
 
 public class Metas implements Serializable {
 
-
+    @SerializedName("id_meta")
+    private int idMeta;
 
     @SerializedName("id_usuario")
     private int idUsuario;
@@ -21,6 +22,8 @@ public class Metas implements Serializable {
 
     @SerializedName("fecha_limite")
     private String fechaLimite;
+    @SerializedName("comentario")
+    private String comentario;
 
 
     public Metas (){
@@ -36,16 +39,36 @@ public class Metas implements Serializable {
                 ", titulo='" + titulo + '\'' +
                 ", montoObjetivo=" + montoObjetivo +
                 ", monto_actual=" + monto_actual +
+                ", comentario = " + comentario +
                 '}';
     }
 
-    public Metas( int idUsuario, double monto_actual, double montoObjetivo, String titulo, String fechaLimite) {
+    public Metas( int idMeta, int idUsuario, double monto_actual, double montoObjetivo, String titulo, String fechaLimite, String comentario) {
 
+        this.idMeta = idMeta;
         this.idUsuario = idUsuario;
         this.monto_actual = monto_actual;
         this.montoObjetivo = montoObjetivo;
         this.titulo = titulo;
         this.fechaLimite = fechaLimite;
+        this.comentario = comentario;
+    }
+
+
+    public int getIdMeta() {
+        return idMeta;
+    }
+
+    public void setIdMeta(int idMeta) {
+        this.idMeta = idMeta;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
     }
 
     public int getIdUsuario() {

@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.weathvision.UserNew.Ajustes;
+import com.example.weathvision.ia.MainPrediction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class BarActivity extends AppCompatActivity {
@@ -40,11 +41,11 @@ public class BarActivity extends AppCompatActivity {
             Fragment fragment = null;
 
             if (item.getItemId() == R.id.casa) {
-                fragment = new Estadisticas();
+                fragment = new MainActivity();
             } else if (item.getItemId() == R.id.alertas) {
                 fragment = new Categorias();
             } else if (item.getItemId() == R.id.ia) {
-               // fragment = new IAFragment();
+                fragment = new MainPrediction();
             } else if (item.getItemId() == R.id.ajustes) {
                 fragment = new Ajustes();
             }

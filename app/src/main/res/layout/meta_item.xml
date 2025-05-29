@@ -4,32 +4,8 @@
              android:layout_height="150dp"
              android:layout_margin="10dp"
                 android:orientation="vertical"
-             android:background="@drawable/edittext_white">
+             android:background="@drawable/edittext_transparent">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"/>
-
-        <TextView
-            android:id="@+id/fecha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="29-03-2025"
-            android:textSize="10dp"
-            android:layout_margin="20dp"
-            android:layout_marginStart="-30dp"
-            />
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/tituloMeta"
@@ -37,6 +13,10 @@
         android:layout_height="wrap_content"
         android:text="Nombre Alerta"
         android:textStyle="bold"
+        android:textColor="@color/white"
+
+        android:textSize="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"/>
 
@@ -45,20 +25,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="200€"
+        android:textColor="@color/white"
+
         android:layout_marginTop="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="29 days left"
-        android:textStyle="italic"
-        android:layout_marginTop="5dp"
-        android:textSize="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/fecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="29-03-2025"
+            android:textColor="@color/white"
+
+            android:textSize="10dp"
+            android:layout_margin="20dp"
+            />
+
+        <TextView
+            android:id="@+id/diasRestantes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textStyle="italic"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:textSize="10dp"
+            />
+
+
+
+    </LinearLayout>
+
+
 
 </LinearLayout>
 

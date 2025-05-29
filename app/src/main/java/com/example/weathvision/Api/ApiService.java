@@ -13,7 +13,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -34,8 +36,14 @@ public interface ApiService {
     @GET("metas/metas")
     Call<List<Metas>> getMetas(@Query("id_usuario") int idUsuario);
 
-    @GET("categorias/categorias")
-    Call<List<Categoria>> getCategorias();
+    @DELETE("metas/{meta_id}")
+    Call<Void> deleteMeta(@Path("meta_id") int metaId);
+
+    @GET("categorias/{idUsuario}")
+    Call<List<Categoria>> getCategorias(@Path("idUsuario") int idUsuario);
+
+    @POST("categorias")
+    Call<Categoria> createCategoria(@Body Categoria categoria);
 
     @POST("transacciones/register")
     Call<Transaction> postTransaccion(@Body Transaction transaccion);
@@ -45,6 +53,9 @@ public interface ApiService {
 
     @PUT("usuarios/actualizar-categoria/{id_usuario}")
     Call<UsuarioResponse> actualizarCategoria(@Path("id_usuario") int idUsuario, @Body CategoriaUpdate categoria);
+
+    @DELETE("transacciones/{idTransaccion}")
+    Call<Void> deleteTransaccion(@Path("idTransaccion") int idTransaccion);
 
 
 

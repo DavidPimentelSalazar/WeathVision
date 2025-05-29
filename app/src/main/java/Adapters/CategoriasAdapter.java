@@ -1,6 +1,7 @@
 package Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.example.weathvision.Api.Class.Categoria;
 import com.example.weathvision.R;
 
 import java.util.List;
+
 public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.CategoryViewHolder> {
     private Context context;
     private List<Categoria> categorias;
@@ -39,13 +41,20 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
         Categoria categoria = categorias.get(position);
         holder.textView.setText(categoria.getNombre());
         // Assuming the imagen field contains the drawable resource name (e.g., "salud.png")
-        int resId = context.getResources().getIdentifier(categoria.getImagen().replace("@drawable/", "").replace(".png", ""), "drawable", context.getPackageName());
+        int resId = context.getResources().getIdentifier(
+                categoria.getImagen().replace("@drawable/", "").replace(".png", ""),
+                "drawable",
+                context.getPackageName()
+        );
         if (resId != 0) {
             holder.imageView.setImageResource(resId);
         } else {
             holder.imageView.setImageResource(android.R.drawable.ic_menu_gallery); // Fallback image
         }
-        holder.itemView.setBackgroundColor(selectedPosition == position ? 0xFFDDDDDD : 0xFFFFFFFF);
+
+        // Set background: light gray for selected, transparent for unselected
+        holder.itemView.setBackgroundColor(selectedPosition == position ? 0xFFDDDDDD : Color.TRANSPARENT);
+
         holder.itemView.setOnClickListener(v -> {
             selectedPosition = position;
             notifyDataSetChanged();

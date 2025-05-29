@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/ajustes"
-        android:icon="@drawable/settings"/>
+        android:icon="@drawable/settings"
+        android:iconTint="@color/white"/>
     <item
         android:id="@+id/casa"
-        android:icon="@drawable/home"/>
+        android:icon="@drawable/home"
+        android:iconTint="@color/white"/>
     <item
         android:id="@+id/alertas"
-        android:icon="@color/white"/>
+        android:icon="@drawable/categoria"
+        android:iconTint="@color/white"/>
     <item
         android:id="@+id/ia"
-        android:icon="@color/white"/>
-
+        android:icon="@drawable/barchar"
+        android:iconTint="@color/white"/>
 </menu>
