@@ -57,7 +57,7 @@ public class NameMeta extends Fragment {
 
         getParentFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.mainRegister, nextFragment) // Use nextFragment here
+                .replace(R.id.frame_transaction, nextFragment)
                 .addToBackStack(null)
                 .commit();
     }

@@ -29,7 +29,8 @@ public interface ApiService {
 
     @POST("usuarios/register")
     Call<UsuarioResponse> postUsuariosRegister(@Body UsuarioRegisterRequest usuarioRegisterRequest);
-
+    @PUT("categorias/{id}")
+    Call<Categoria> updateCategoria(@Path("id") int idCategoria, @Body Categoria categoria);
     @POST("metas/registerMeta")
     Call<Metas> postMetasRegister(@Body Metas metas);
 

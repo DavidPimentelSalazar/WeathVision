@@ -119,9 +119,9 @@ public class MetasAdapter extends RecyclerView.Adapter<MetasAdapter.MetaViewHold
          * **/
         title.setText(meta.getTitulo());
         fecha.setText(meta.getFechaLimite());
-        balance.setText("Balance Inicial: " + meta.getMonto_actual() + "€");
-        objetivo.setText("Objetivo: " + meta.getMontoObjetivo() + "€");
-        comentario.setText("Comentario: " + meta.getComentario());
+        balance.setText( meta.getMonto_actual() + "€");
+        objetivo.setText(meta.getMontoObjetivo() + "€");
+        comentario.setText(meta.getComentario());
 
 
         CalcularDiasRestantes(diasRestantes, meta);

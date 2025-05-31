@@ -28,4 +28,43 @@
         <item>Español</item>
         <item>Inglés</item>
     </string-array>
+
+    <string-array name="categorias_array">
+        <item>drawable/salud</item>
+        <item>drawable/salud</item>
+        <item>drawable/ocio</item>
+        <item>drawable/transporte</item>
+        <item>drawable/casa</item>
+        <item>drawable/educacion</item>
+        <item>drawable/cafe</item>
+        <item>drawable/compras</item>
+        <item>drawable/comida</item>
+        <item>drawable/servicios</item>
+        <item>drawable/ropa</item>
+        <item>drawable/viajes</item>
+        <item>drawable/tecnologia</item>
+        <item>drawable/hogar</item>
+        <item>drawable/impuestos</item>
+        <item>drawable/mascotas</item>
+        <item>drawable/ahorros</item>
+        <item>drawable/deudas</item>
+        <item>drawable/entretenimiento</item>
+        <item>drawable/donaciones</item>
+        <item>drawable/subscripciones</item>
+        <item>drawable/deporte</item>
+        <item>drawable/seguros</item>
+        <item>drawable/inversiones</item>
+        <item>drawable/eventos</item>
+        <item>drawable/electronica</item>
+        <item>drawable/belleza</item>
+        <item>drawable/jardineria</item>
+        <item>drawable/arte</item>
+        <item>drawable/musica</item>
+        <item>drawable/libros</item>
+        <item>drawable/cine</item>
+        <item>drawable/vacaciones</item>
+        <item>drawable/reparaciones</item>
+    </string-array>
+
+
 </resources>

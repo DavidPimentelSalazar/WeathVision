@@ -20,7 +20,7 @@ public class IndexActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_index);
 
-        button = findViewById(R.id.getStarted);
+        button = findViewById(R.id.get_started);
         button.setOnClickListener( v -> getStarted());
 
 

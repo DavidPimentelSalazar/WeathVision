@@ -1,54 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@drawable/background_main"
     tools:context=".MainActivity">
 
+    <!-- Header -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/header"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="10dp"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/nombre"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="5dp"
-            android:layout_gravity="center"
-            android:text="¡Hola, David Pimentel!"
+            android:text="¡Hola, Nombre!"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:textStyle="italic" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/perfil"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_gravity="center"
             android:background="@drawable/circulo"
             android:text="+"
-            android:textSize="20dp" />
-
+            android:textSize="20sp" />
     </LinearLayout>
 
-
+    <!-- Balance -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/balance_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:padding="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/background_balance">
+        android:background="@drawable/background_balance"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,30 +62,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:text="Balance"
-                android:layout_gravity="center"
                 android:textColor="@color/white"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_marginStart="20dp"
                 android:id="@+id/grafica"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="10dp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:background="@drawable/circle_button"
-                />
-
+                android:background="@drawable/circle_button" />
         </LinearLayout>
-
-
-
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -92,15 +89,15 @@
                 android:layout_marginStart="20dp"
                 android:textColor="@color/white"
                 android:text="€"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/arrow_drop_up"
-                android:layout_gravity="center"/>
+                android:src="@drawable/arrow_drop_up" />
 
             <TextView
                 android:id="@+id/ingresos"
@@ -109,31 +106,27 @@
                 android:textColor="@color/green"
                 android:layout_gravity="center"
                 android:text="€"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_gravity="center"
+
                 android:layout_marginStart="20dp"
-                android:src="@drawable/arrow_drop_down"
-                android:layout_gravity="center"/>
+                android:src="@drawable/arrow_drop_down" />
 
             <TextView
                 android:id="@+id/gastado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:textColor="@color/red"
+                android:layout_gravity="center"
                 android:text="€"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
-
-
-
-
         </LinearLayout>
-
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart"
@@ -142,84 +135,80 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
-            android:layout_gravity="center"
             android:layout_marginEnd="30dp"
-            android:visibility="gone"
-            />
-
+            android:visibility="gone" />
     </LinearLayout>
 
-        <ScrollView
+    <!-- Scrollable content -->
+    <ScrollView
+        android:id="@+id/scroll_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/balance_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
 
-            <LinearLayout
+            <!-- Alertas -->
+            <TextView
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alertas"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_metas"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-    <TextView
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Alertas"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="left"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_metas"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="horizontal" />
 
+            <!-- Transacciones -->
+            <TextView
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transacciones recientes"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp" />
+        </LinearLayout>
+    </ScrollView>
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <TextView
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Transacciones recientes"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="left"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        />
-
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_transactions"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-      />
-
+    <!-- Botón flotante fijo superpuesto -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_add_transaction"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="-200dp"
-        android:layout_gravity="right"
-        android:background="@drawable/circle_button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:text="+"
         android:textColor="@color/black"
-        android:textSize="25dp"
-        android:layout_marginEnd="30dp"
-        android:backgroundTint="@color/white" />
+        android:textSize="25sp"
+        android:background="@drawable/circle_button"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="20dp" />
 
-
-
-
-
-    </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

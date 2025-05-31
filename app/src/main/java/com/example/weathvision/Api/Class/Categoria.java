@@ -17,6 +17,17 @@ public class Categoria {
 
     @SerializedName("is_main")
     private int isMain;
+
+    public Categoria(int id, String nombre, String imagen) {
+        this.idCategoria = id;
+        this.nombre = nombre;
+        this.imagen = imagen;
+    }
+
+    public Categoria() {
+
+    }
+
     public int getIdCategoria() { return idCategoria; }
     public void setIdCategoria(int idCategoria) { this.idCategoria = idCategoria; }
 

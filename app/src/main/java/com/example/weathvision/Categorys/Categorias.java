@@ -1,6 +1,7 @@
-package com.example.weathvision;
+package com.example.weathvision.Categorys;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weathvision.Api.ApiClient;
 import com.example.weathvision.Api.ApiService;
 import com.example.weathvision.Api.Class.Categoria;
+import com.example.weathvision.R;
+import com.example.weathvision.UserNew.PatrimonioActual;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -66,7 +69,13 @@ public class Categorias extends Fragment {
         categoriasList = new ArrayList<>();
         filteredCategoriasList = new ArrayList<>();
         categoriasAdapter = new CategoriasAdapter(context, filteredCategoriasList, categoria -> {
-
+            // Abrir fragmento para modificar la categoría seleccionada
+            ModificarCategoria fragment = ModificarCategoria.newInstance(categoria);
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null)
+                    .commit();
         });
         recyclerView.setLayoutManager(new GridLayoutManager(context, 3));
         recyclerView.setAdapter(categoriasAdapter);
@@ -94,9 +103,14 @@ public class Categorias extends Fragment {
         }
 
         // Setup add category button
-        anadirButton.setOnClickListener(v -> showAddCategoryDialog());
+        anadirButton.setOnClickListener(v -> showNewCategory());
 
         return view;
+    }
+
+    private void showNewCategory() {
+        Intent intent = new Intent (getContext(), NewCategory.class);
+        startActivity(intent);
     }
 
     private void loadCategorias() {
@@ -139,6 +153,8 @@ public class Categorias extends Fragment {
         }
         categoriasAdapter.notifyDataSetChanged();
     }
+
+
 
     private void showAddCategoryDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

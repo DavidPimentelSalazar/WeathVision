@@ -66,6 +66,7 @@ public class MainActivity extends Fragment {
     private Button perfil, grafica;
     private PieChart pieChart;
     private Context context;
+    private TextView nombre;
 
 
     public MainActivity() {
@@ -82,6 +83,8 @@ public class MainActivity extends Fragment {
 
         grafica = view.findViewById(R.id.grafica);
         grafica.setOnClickListener( v -> mostrarGrafica());
+
+        nombre = view.findViewById(R.id.nombre);
 
         pieChart = view.findViewById(R.id.chart);
         // Initialize TextViews
@@ -106,6 +109,8 @@ public class MainActivity extends Fragment {
         apiService = ApiClient.getClient().create(ApiService.class);
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int idUsuario = sharedPreferences.getInt("id_usuario", -1);
+        String nombreUsuario = sharedPreferences.getString("nombre_usuario", "ValorPorDefecto");
+        nombre.setText("¡Hola, " + nombreUsuario + "!");
 
         if (idUsuario != -1) {
             loadCategorias(idUsuario);
@@ -118,6 +123,7 @@ public class MainActivity extends Fragment {
             textViewIngresos.setText("0.00€");
             textViewGastado.setText("0.00€");
         }
+
 
         Button btnAdd = view.findViewById(R.id.btn_add_transaction);
         btnAdd.setOnClickListener(v -> mostrarMasBotones(view));

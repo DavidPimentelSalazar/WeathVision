@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.weathvision.Categorys.Categorias;
 import com.example.weathvision.UserNew.Ajustes;
 import com.example.weathvision.ia.MainPrediction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
