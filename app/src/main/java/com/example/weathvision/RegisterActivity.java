@@ -18,7 +18,6 @@ import com.example.weathvision.Api.ApiService;
 import com.example.weathvision.Api.Class.UsuarioRegisterRequest;
 import com.example.weathvision.Api.Class.UsuarioResponse;
 import com.example.weathvision.UserNew.MainActivityRegister;
-import com.example.weathvision.UserNew.StartFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Register extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     private EditText user, email, password, verificationPassword;
     private Button button;
@@ -102,7 +101,7 @@ public class Register extends AppCompatActivity {
                 public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         UsuarioResponse usuarioResponse = response.body();
-                        Toast.makeText(Register.this,
+                        Toast.makeText(RegisterActivity.this,
                                 "Registro exitoso: " + usuarioResponse.getNombreUsuario() + ", ID: " + usuarioResponse.getIdUsuario(),
                                 Toast.LENGTH_LONG).show();
 
@@ -111,7 +110,7 @@ public class Register extends AppCompatActivity {
                         editor.putInt("id_usuario", usuarioResponse.getIdUsuario());
                         editor.apply();
 
-                        Intent intent = new Intent(Register.this, MainActivityRegister.class);
+                        Intent intent = new Intent(RegisterActivity.this, MainActivityRegister.class);
                         startActivity(intent);
 
                     } else {
@@ -124,13 +123,13 @@ public class Register extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(Register.this, errorMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<UsuarioResponse> call, Throwable t) {
-                    Toast.makeText(Register.this,
+                    Toast.makeText(RegisterActivity.this,
                             "Fallo en la conexión: " + t.getMessage(),
                             Toast.LENGTH_LONG).show();
                 }

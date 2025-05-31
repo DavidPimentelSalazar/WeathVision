@@ -29,8 +29,6 @@ import retrofit2.Response;
 
 public class StartFragment extends Fragment {
 
-    private LinearLayout categoria;
-    private Button button;
     private ApiService apiService;
 
     @Nullable
@@ -39,19 +37,6 @@ public class StartFragment extends Fragment {
         // Inflate the fragment's layout
         View view = inflater.inflate(R.layout.fragment_start, container, false);
 
-        // Initialize views
-        categoria = view.findViewById(R.id.categoria);
-        button = view.findViewById(R.id.button);
-
-        // Set button click listener
-        button.setOnClickListener(v -> {
-            // Clear parent activity content and show NameAlertFragment
-            getParentFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.mainRegister, new NameAlertFragment())
-                    .addToBackStack(null) // Optional: Allows back navigation
-                    .commit();
-        });
 
         // Initialize categories
         int[] imagenesCategorias = {
@@ -132,7 +117,6 @@ public class StartFragment extends Fragment {
             @Override
             public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Categoría actualizada correctamente", Toast.LENGTH_SHORT).show();
                     // Clear parent activity content and show NameAlertFragment
                     getParentFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
@@ -140,7 +124,6 @@ public class StartFragment extends Fragment {
                             .addToBackStack(null) // Optional: Allows back navigation
                             .commit();
                 } else {
-                    Toast.makeText(context, "Error al actualizar la categoría", Toast.LENGTH_SHORT).show();
                 }
             }
 

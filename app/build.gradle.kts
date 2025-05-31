@@ -40,6 +40,11 @@ dependencies {
 
     implementation ("com.github.PhilJay:MPAndroidChart:v3.0.3")
 
+    //MAIl
+
+    implementation ("com.sun.mail:android-mail:1.6.2")
+    implementation ("com.sun.mail:android-activation:1.6.2")
+
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

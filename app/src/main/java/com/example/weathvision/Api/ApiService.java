@@ -2,6 +2,7 @@ package com.example.weathvision.Api;
 
 import com.example.weathvision.Api.Class.Categoria;
 import com.example.weathvision.Api.Class.CategoriaUpdate;
+import com.example.weathvision.Api.Class.CorreoRequest;
 import com.example.weathvision.Api.Class.LoginResponse;
 import com.example.weathvision.Api.Class.Metas;
 import com.example.weathvision.Api.Class.Transaction;
@@ -10,8 +11,10 @@ import com.example.weathvision.Api.Class.UsuarioRegisterRequest;
 import com.example.weathvision.Api.Class.UsuarioResponse;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -55,8 +58,17 @@ public interface ApiService {
     @PUT("usuarios/actualizar-categoria/{id_usuario}")
     Call<UsuarioResponse> actualizarCategoria(@Path("id_usuario") int idUsuario, @Body CategoriaUpdate categoria);
 
+    @PUT("/usuarios/actualizar-contrasena/{correo}")
+    Call<UsuarioResponse> actualizarContrasena(@Path("correo") String correo, @Body Map<String, String> body);
+
     @DELETE("transacciones/{idTransaccion}")
     Call<Void> deleteTransaccion(@Path("idTransaccion") int idTransaccion);
+
+    @POST("mail/enviar-correo/")
+    Call<Response> enviarCorreo(@Body CorreoRequest request);
+
+    @GET("usuarios/correos")
+    Call<List<String>> obtenerCorreos();
 
 
 

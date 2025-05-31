@@ -17,6 +17,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".contrasena.MainContrasena"
+            android:exported="false" />
+        <activity
             android:name=".Categorys.NewCategory"
             android:exported="false" />
         <activity
@@ -29,7 +32,7 @@
             android:name=".BarActivity"
             android:exported="false" />
         <activity
-            android:name=".Register"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

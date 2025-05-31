@@ -3,7 +3,6 @@ package com.example.weathvision;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,8 +13,8 @@ import com.example.weathvision.Api.ApiClient;
 import com.example.weathvision.Api.ApiService;
 import com.example.weathvision.Api.Class.LoginResponse;
 import com.example.weathvision.Api.Class.UsuarioLoginRequest;
-import com.example.weathvision.UserNew.NameAlertFragment;
-import com.example.weathvision.UserNew.StartFragment;
+import com.example.weathvision.contrasena.ContrasenaOlvidada;
+import com.example.weathvision.contrasena.MainContrasena;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,7 +23,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText user, password;
-    private TextView register;
+    private TextView register, contrasenaOlvidada;
     private Button loginButton;
 
     @Override
@@ -37,7 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.button);
         register = findViewById(R.id.register);
-
+        contrasenaOlvidada = findViewById(R.id.contrasenaOlvidada);
+        contrasenaOlvidada.setOnClickListener( v -> nuevaContrasena());
         register.setOnClickListener( v -> registerUser());
 
         // Configurar el listener del botón
@@ -45,9 +45,18 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
+
+    private void nuevaContrasena() {
+
+        Intent intent = new Intent(this, MainContrasena.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
     private void registerUser() {
 
-        Intent intent = new Intent(LoginActivity.this, Register.class);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 
