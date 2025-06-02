@@ -1,4 +1,4 @@
-# WeathVision
+# WealthVision
 ## Bienvenido/a al repositorio oficial de WeathVision, una aplicación desarrollada por David Pimentel Salazar. 
 
 Aquí encontrarás toda la información necesaria sobre el desarrollo de mi aplicación en tiempo de TFC.
