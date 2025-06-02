@@ -1,12 +1,18 @@
 package com.example.weathvision;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.weathvision.Api.ApiClient;
@@ -26,92 +32,142 @@ public class LoginActivity extends AppCompatActivity {
     private TextView register, contrasenaOlvidada;
     private Button loginButton;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Inicializar los elementos de la UI
-        user = findViewById(R.id.userEditText); // Asegúrate de que el ID coincida con tu layout
+        /**
+         * Inicializamos los elementos del Layout
+         * **/
+        user = findViewById(R.id.userEditText);
         password = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.button);
         register = findViewById(R.id.register);
         contrasenaOlvidada = findViewById(R.id.contrasenaOlvidada);
-        contrasenaOlvidada.setOnClickListener( v -> nuevaContrasena());
-        register.setOnClickListener( v -> registerUser());
+        progressBar = findViewById(R.id.progressBar);
+        /**
+         * Funcionalidad al textview para obtener una nueva contraseña
+         * **/
+        contrasenaOlvidada.setOnClickListener(v -> nuevaContrasena());
 
-        // Configurar el listener del botón
-        loginButton.setOnClickListener( v -> loginUser());
+        /**
+         * Funcionalidad por si el usuario no esta registrado
+         * **/
+        register.setOnClickListener(v -> registerUser());
+
+        /**
+         * Damos funcionalidad al botón de loguearse
+         * **/
+        loginButton.setOnClickListener(v -> loginUser(progressBar));
 
     }
 
 
-
+    /**
+     * Método donde nos llevará al activity de cambiar la contraseña
+     **/
     private void nuevaContrasena() {
-
+        progressBar.setVisibility(VISIBLE);
         Intent intent = new Intent(this, MainContrasena.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
+    /**
+     * Método donde nos llevará al activity de registrarse
+     **/
     private void registerUser() {
-
+        progressBar.setVisibility(VISIBLE);
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void loginUser() {
-        // Obtener los valores de los campos
+    /**
+     * Método que verifica en la base de datos usuario y contraseña introducido
+     * por el usuario para loguearse
+     **/
+    private void loginUser(ProgressBar progressBar) {
+        progressBar.setVisibility(VISIBLE);
+        /**
+         * Obtenemos los valores tanto del editext de nick del usuario y contraseña
+         * **/
         String textUser = user.getText().toString().trim();
         String textPass = password.getText().toString().trim();
 
-        // Validar que los campos no estén vacíos
+        /**
+         * Validamos que los editext no esten vacíos
+         * **/
         if (textUser.isEmpty() || textPass.isEmpty()) {
             Toast.makeText(LoginActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(GONE);
+
             return;
         }
 
+
         try {
-            // Crear el objeto de solicitud con los datos del usuario
+            /**
+             * Creamos el objeto con los datos introducidos por el usuario
+             * **/
             UsuarioLoginRequest usuarioLoginRequest = new UsuarioLoginRequest(textUser, textPass);
 
-            // Inicializar el servicio API usando ApiClient
+            /**
+             * Inicializamos la APi para hacer la llamada
+             * **/
             ApiService apiService = ApiClient.getClient().create(ApiService.class);
             Call<LoginResponse> call = apiService.postUsuariosLogin(usuarioLoginRequest);
 
-            // Ejecutar la solicitud de manera asíncrona
+            /**
+             * Ejecutamos la solicitud a la API
+             * **/
             call.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        // Login exitoso
+                        /**
+                         * Si la API responde de manera exitosa, recogemos el id del usuario
+                         * que nos servirá mas adelante para recoger todos los movimientos del mismo,
+                         * como transacciones, metas, alertas ...
+                         * **/
                         LoginResponse loginResponse = response.body();
                         int idUsuario = loginResponse.getIdUsuario();
 
+                        /**
+                         * Guardamos el id del usuario y nombre para usarlo mas adelante.
+                         * **/
                         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt("id_usuario", idUsuario);
                         editor.putString("nombre_usuario", textUser);
                         editor.apply();
 
+
                         Toast.makeText(LoginActivity.this,
                                 "¡Bienvenido!",
                                 Toast.LENGTH_LONG).show();
 
+
                         Intent intent = new Intent(LoginActivity.this, BarActivity.class);
                         startActivity(intent);
+                        finish();
+                        progressBar.setVisibility(GONE);
+
 
                     } else {
-                        // Error en la respuesta (e.g., 401 Unauthorized)
+                        progressBar.setVisibility(GONE);
                         Toast.makeText(LoginActivity.this,
-                                "Usuario o contraseña incorrectos" ,
+                                "Usuario o contraseña incorrectos",
                                 Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    // Error de conexión o red
+                    progressBar.setVisibility(GONE);
                     Toast.makeText(LoginActivity.this,
                             "Fallo en la conexión: " + t.getMessage(),
                             Toast.LENGTH_LONG).show();
@@ -119,6 +175,8 @@ public class LoginActivity extends AppCompatActivity {
             });
 
         } catch (Exception e) {
+            progressBar.setVisibility(GONE);
+
             Toast.makeText(LoginActivity.this,
                     "Error inesperado: " + e.getMessage(),
                     Toast.LENGTH_LONG).show();

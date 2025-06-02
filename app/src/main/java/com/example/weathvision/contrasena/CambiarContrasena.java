@@ -43,6 +43,10 @@ public class CambiarContrasena extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cambiar_contrasena, container, false);
+
+        /**
+         * Recogemos la clave generada en el anterior Fragmento y el correo al que se le envió
+         * **/
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int nuevaClave = sharedPreferences.getInt("nuevaClave", -1);
         String destinatario = sharedPreferences.getString("destinatario", "");
@@ -56,6 +60,9 @@ public class CambiarContrasena extends Fragment {
 
         button = view.findViewById(R.id.boton_verificar);
 
+        /**
+         * Funcionalidad al botón para la verificación de la clave y cambio de contraseña
+         * **/
         button.setOnClickListener(v -> {
             String textoCodigo = codigoIntroducido.getText().toString().trim();
             cambiarContrasena(nuevaClave, textoCodigo, destinatario);
@@ -64,18 +71,41 @@ public class CambiarContrasena extends Fragment {
         return view;
     }
 
+
+
+    /**
+     * Este Método verifica la clave mandada al correo y si es igual a la que introduce el usuario,
+     * se mostraran dos edittext para hacer una modificacion de contraseña para su cuenta.
+     * **/
     private void cambiarContrasena(int nuevaClave, String textoCodigo, String destinatario) {
+
+        /**
+         * Verificamos que el edittext donde se introduce el código no este vacío, si lo está,
+         * se mostrará un mensaje
+         * **/
         if (textoCodigo.isEmpty()) {
             codigoIntroducido.setError("Introduce el código de verificación.");
             return;
         }
 
+
         try {
+
+            /**
+             *  recogemos el codigo introducido por el usuario en el edittext
+             * **/
             int codigoUsuario = Integer.parseInt(textoCodigo);
 
+
+            /**
+             * Si el código introducido por el usuario y la clave son iguales
+             * **/
             if (codigoUsuario == nuevaClave) {
 
 
+                /**
+                 * se mostrarán los edittext de cambio de contraseña
+                 * **/
                 textVerificacion.setText("Introduce tu nueva contraseña para tu cuenta");
                 textCodigo.setText("Verificación de código exitoso");
                 codigoIntroducido.setEnabled(false);
@@ -83,6 +113,9 @@ public class CambiarContrasena extends Fragment {
                 confirmacionContrasena.setVisibility(VISIBLE);
 
 
+                /**
+                 * Funcionalidad del botón para cambiar la contraseña
+                 * **/
                 button.setOnClickListener( v -> contrasenaCambiada(destinatario));
 
 
@@ -95,20 +128,48 @@ public class CambiarContrasena extends Fragment {
         }
     }
 
+
+    /**
+     * Método el cual recoge la nueva contraseña introducida por el usuario y la remplaza por la que ya estaba
+     * en la base de datos.
+     * **/
     private void contrasenaCambiada(String destinatario) {
+
+
+        /**
+         *  Recogemos los datos (la contraseña y la confirmación de contraseña)
+         * **/
         String nuevaPass = nuevaContrasena.getText().toString().trim();
         String confirmPass = confirmacionContrasena.getText().toString().trim();
 
+
+        /**
+         * si la confirmación de la contraseña es valida realizará el contenido, si no, mandará un mensaje
+         * al usuario de que las contraseñas introducidas no son iguales
+         * **/
         if (nuevaPass.equals(confirmPass)) {
+
+
+            /**
+             * Llamamos a la API
+             * **/
             ApiService apiService = ApiClient.getClient().create(ApiService.class);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+
+                /**
+                 * Decodificamos el correo porque daba error en la API al pasarlo, el @ salia como %40% y
+                 * no lo comparaba bien, en este caso nos aseguramos el buen funcionamiento
+                 * **/
                 String correoDecodificado = URLDecoder.decode(destinatario, StandardCharsets.UTF_8);
 
-                // Crear el cuerpo de la solicitud con el nombre correcto
+
+                /**
+                 * Crear el map con el nombre correcto para que se pueda hashear correctamente si no daba error
+                 * **/
                 Map<String, String> body = new HashMap<>();
-                body.put("contraseña_hash", nuevaPass); // Use "contraseña_hash" instead of "contraseña"
-                Log.d("API_REQUEST", "Cuerpo enviado: " + body.toString()); // Depurar el cuerpo
+                body.put("contraseña_hash", nuevaPass);
 
                 Call<UsuarioResponse> call = apiService.actualizarContrasena(correoDecodificado, body);
                 call.enqueue(new Callback<UsuarioResponse>() {
@@ -116,6 +177,10 @@ public class CambiarContrasena extends Fragment {
                     public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
                         if (response.isSuccessful()) {
 
+
+                            /**
+                             * Si la modificación es exitosa, redirigirá al usuario al login
+                             * **/
                             Toast.makeText(getContext(), "Contraseña Actualizada", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getContext(), LoginActivity.class);
                             startActivity(intent);

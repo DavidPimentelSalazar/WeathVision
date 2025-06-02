@@ -7,9 +7,7 @@
     android:padding="16dp"
     android:background="@drawable/background">
 
-    <!-- Título -->
 
-    <!-- Instrucción de búsqueda -->
 
     <TextView
         android:id="@+id/text_codigo"
@@ -39,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_codigo"
         android:layout_marginTop="10dp"/>
 
-    <!-- Campo de código de verificación -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/codigo_input_layout"
         android:layout_width="0dp"
@@ -59,7 +57,7 @@
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Campo Nueva Contraseña -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nueva_contrasena_input_layout"
         android:layout_width="0dp"
@@ -78,7 +76,7 @@
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Confirmar Contraseña -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmar_contrasena_input_layout"
         android:layout_width="0dp"
@@ -97,9 +95,6 @@
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Botón de verificación -->
-
-    <!-- Aviso para revisar otras carpetas -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/boton_verificar"
         android:layout_width="0dp"

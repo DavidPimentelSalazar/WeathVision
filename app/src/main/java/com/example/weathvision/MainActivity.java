@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,11 +112,11 @@ public class MainActivity extends Fragment {
         nombre.setText("¡Hola, " + nombreUsuario + "!");
 
         if (idUsuario != -1) {
+
             loadCategorias(idUsuario);
             loadTransacciones(idUsuario);
             loadMetas(idUsuario);
         } else {
-            Log.w(TAG, "No user logged in, idUsuario: " + idUsuario);
             Toast.makeText(context, "No se encontró el usuario logueado", Toast.LENGTH_LONG).show();
             textViewPatrimonio.setText("0.00€");
             textViewIngresos.setText("0.00€");
@@ -188,16 +187,13 @@ public class MainActivity extends Fragment {
                     actualizarGrafico();
 
                     Toast.makeText(context, "Transacción eliminada", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Transaction deleted: id=" + transaction.getIdTransaccion());
                 } else {
-                    Log.w(TAG, "Failed to delete transaction, response code: " + response.code());
                     Toast.makeText(context, "Error al eliminar la transacción", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "Error deleting transaction: " + t.getMessage());
                 Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -214,16 +210,13 @@ public class MainActivity extends Fragment {
                     adapter.updateCategorias(categorias);
                     actualizarGrafico();
 
-                    Log.d(TAG, "Loaded " + categorias.size() + " categories for user " + idUsuario);
                 } else {
-                    Log.w(TAG, "Failed to load categories, response code: " + response.code() + ", message: " + response.message());
                     Toast.makeText(context, "No se encontraron categorías", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Categoria>> call, Throwable t) {
-                Log.e(TAG, "Error loading categories: " + t.getMessage(), t);
                 Toast.makeText(context, "Error al cargar categorías: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -238,16 +231,13 @@ public class MainActivity extends Fragment {
                     metas.clear();
                     metas.addAll(response.body());
                     metasAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "Loaded " + metas.size() + " metas for user " + idUsuario);
                 } else {
-                    Log.w(TAG, "Failed to load metas, response code: " + response.code() + ", message: " + response.message());
                     Toast.makeText(context, "No se encontraron metas", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Metas>> call, Throwable t) {
-                Log.e(TAG, "Error loading metas: " + t.getMessage(), t);
                 Toast.makeText(context, "Error al cargar metas: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -266,9 +256,7 @@ public class MainActivity extends Fragment {
                     recyclerView.scrollToPosition(0);
                     updateTransactionSums();
                     actualizarGrafico();
-                    Log.d(TAG, "Loaded " + transacciones.size() + " transactions for user " + idUsuario);
                 } else {
-                    Log.w(TAG, "No se encontraron transacciones, response code: " + response.code() + ", message: " + response.message());
                     Toast.makeText(context, "No se encontraron transacciones", Toast.LENGTH_LONG).show();
                     textViewPatrimonio.setText("0.00€");
                     textViewIngresos.setText("0.00€");
@@ -278,7 +266,6 @@ public class MainActivity extends Fragment {
 
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
-                Log.e(TAG, "Error al cargar transacciones: " + t.getMessage(), t);
                 Toast.makeText(context, "Error al cargar transacciones: " + t.getMessage(), Toast.LENGTH_LONG).show();
                 textViewPatrimonio.setText("0.00€");
                 textViewIngresos.setText("0.00€");
@@ -303,7 +290,6 @@ public class MainActivity extends Fragment {
         textViewPatrimonio.setText(String.format("%.2f€", patrimonio));
         textViewIngresos.setText(String.format("%.2f€", totalIngresos));
         textViewGastado.setText(String.format("%.2f€", totalGastos));
-        Log.d(TAG, "Updated sums: ingresos=" + totalIngresos + ", gastos=" + totalGastos + ", patrimonio=" + patrimonio);
     }
 
 
@@ -311,6 +297,7 @@ public class MainActivity extends Fragment {
     private void showAddTransactionDialog(int idUsuario) {
         Intent intent = new Intent(getContext(), MainTransactions.class);
         startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private void saveTransaction(Transaction transaccion) {
@@ -323,17 +310,14 @@ public class MainActivity extends Fragment {
                     adapter.notifyItemInserted(0);
                     recyclerView.scrollToPosition(0);
                     updateTransactionSums();
-                    Log.d(TAG, "Transaction saved: tipo=" + response.body().getTipo() + ", monto=" + response.body().getMonto());
                     Toast.makeText(context, "Transacción guardada", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.w(TAG, "Failed to save transaction, response code: " + response.code() + ", message: " + response.message());
                     Toast.makeText(context, "Error al guardar la transacción", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Transaction> call, Throwable t) {
-                Log.e(TAG, "Error saving transaction: " + t.getMessage(), t);
                 Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -372,7 +356,6 @@ public class MainActivity extends Fragment {
                 total += transaccion.getMonto();
             }
         }
-        Log.d(TAG, "Categoria: " + categoria.getNombre() + ", Valor: " + total); // Para depuración
         return total;
     }
 }

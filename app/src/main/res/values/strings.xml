@@ -66,5 +66,12 @@
         <item>drawable/reparaciones</item>
     </string-array>
 
+    <string-array name="years_options">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+
+
 
 </resources>

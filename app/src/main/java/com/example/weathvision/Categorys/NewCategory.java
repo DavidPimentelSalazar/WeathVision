@@ -179,17 +179,14 @@ public class NewCategory extends AppCompatActivity {
             public void onResponse(Call<Categoria> call, Response<Categoria> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Categoria savedCategoria = response.body();
-                    Log.d(TAG, "Categoría guardada para el usuario " + idUsuario + ": " + savedCategoria.getNombre());
                     Toast.makeText(NewCategory.this, "Categoría guardada: " + savedCategoria.getNombre(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.w(TAG, "Error al guardar la categoría, código de respuesta: " + response.code());
                     Toast.makeText(NewCategory.this, "Error al guardar la categoría", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Categoria> call, Throwable t) {
-                Log.e(TAG, "Error al guardar la categoría: " + t.getMessage());
                 Toast.makeText(NewCategory.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

@@ -111,6 +111,7 @@ public class Categorias extends Fragment {
     private void showNewCategory() {
         Intent intent = new Intent (getContext(), NewCategory.class);
         startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private void loadCategorias() {
@@ -124,16 +125,13 @@ public class Categorias extends Fragment {
                     filteredCategoriasList.clear();
                     filteredCategoriasList.addAll(categoriasList);
                     categoriasAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "Loaded " + categoriasList.size() + " categories for user " + idUsuario);
                 } else {
-                    Log.w(TAG, "Failed to load categories, response code: " + response.code());
                     Toast.makeText(context, "No se encontraron categorías", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Categoria>> call, Throwable t) {
-                Log.e(TAG, "Error loading categories: " + t.getMessage());
                 Toast.makeText(context, "Error al cargar categorías: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -199,16 +197,13 @@ public class Categorias extends Fragment {
                     categoriasAdapter.notifyItemInserted(filteredCategoriasList.size() - 1);
                     recyclerView.scrollToPosition(filteredCategoriasList.size() - 1);
                     Toast.makeText(context, "Categoría añadida", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Category saved for user " + idUsuario + ": " + response.body().getNombre());
                 } else {
-                    Log.w(TAG, "Failed to save category, response code: " + response.code());
                     Toast.makeText(context, "Error al añadir la categoría", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Categoria> call, Throwable t) {
-                Log.e(TAG, "Error saving category: " + t.getMessage());
                 Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

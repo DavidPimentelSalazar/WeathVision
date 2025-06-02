@@ -38,39 +38,88 @@ public class ContrasenaOlvidada extends Fragment {
         button = view.findViewById(R.id.siguienteContrasenaOlvidada);
         editText = view.findViewById(R.id.correoContrasenaOlvidada);
 
+        /**
+         * Funcionalidad al botón para realizar el metodo
+         * **/
         button.setOnClickListener( v -> nuevaContrasena());
         return  view;
     }
 
 
+    /**
+     * Metodo el cual enviará una clave al usuario que solicite cambiar la contraseña,
+     * en este caso el usuario introduce el correo al que le llegará dicha clave, verificará que
+     * ese correo existe en la base de datos para mayor protección y automaticamente cambiará de fragmento,
+     * donde deberá de introducir la clave.
+     * **/
     private void nuevaContrasena() {
+        /**
+         * Creamos una clave de 6 dígitos, en este caso puse que sea mayor a 100000 y hasta 900000 como rango
+         * de aleatoriedad de número.
+         * **/
         int nuevaClave = (int) (Math.random() * 900000) + 100000;
+
+
+        /**
+         * Recogemos el correo introducido por el usuario.
+         * **/
         String destinatario = editText.getText().toString().trim();
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("nuevaClave", nuevaClave);
-        editor.putString("destinatario", destinatario);
-        editor.apply();
+        /**
+         * Si el edittext esta vacío mandará un error de que necesita introducir el correo
+         * **/
 
         if (destinatario.isEmpty()) {
             editText.setError("Introduce un correo");
             return;
         }
 
+        /**
+         * Guardamos la clave y el correo para usarlo en el siguiente fragmento.
+         * **/
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("nuevaClave", nuevaClave);
+        editor.putString("destinatario", destinatario);
+        editor.apply();
+
+
+        /**
+         * Llamamos a la Api para recoger en lista los correos que hay y ver si el introducido por el usuario
+         * existe en la base de datos
+         * **/
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<List<String>> call = apiService.obtenerCorreos();
 
         call.enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                /**
+                 * Recogemos los correos de la base de datos
+                 * **/
                 List<String> correosActivos = response.body();
 
+                /**
+                 * Recorremos la lista y vemos si coincide alguno con el introducido por el usuario,
+                 * si no coincide saltará un mensaje.
+                 * **/
                 for (String correo : correosActivos) {
                     if (correo.equals(destinatario)) {
+                        /**
+                         * Si el correo coincide, mandaremos un correo hacia ese mismo correo con la clave generada
+                         * anteriormente para que pueda verificarla y cambiar la contraseña.
+                         * **/
+
+                        /**
+                         * Mandamos un asunto predeterminado
+                         * **/
                         String asunto = "Recuperación de contraseña - WeathVision";
 
-                        // HTML-formatted email body
+                        /**
+                         * Mandamos el cuerpo del mensaje, en este caso lo hice con html para que en la visualización del mensaje
+                         * en el correo quedase mas bonito
+                         * **/
+
                         String mensaje = "<html>" +
                                 "<body style='font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0; background-color: #F5F5F5;'>" +
                                 "<div style='max-width: 600px; margin: 0 auto; padding: 20px; background-color: #FFFFFF;'>" +
@@ -103,13 +152,20 @@ public class ContrasenaOlvidada extends Fragment {
                                 "</body>" +
                                 "</html>";
 
-                        // Ejecutar en un hilo separado
+                        /**
+                         * Ejecutaremos el envio del correo en un hilo diferente, al llevar tiempo del enviado del correo,
+                         * nos aseguramos que al pasarlo en un hilo diferente y no en el Main, no se congele la aplicación,
+                         * y se muestre lag hacia el usuario.
+                         * **/
                         ExecutorService executorService = Executors.newSingleThreadExecutor();
                         executorService.execute(() -> {
                             MailSender mailSender = new MailSender();
                             mailSender.enviarCorreo(destinatario, asunto, mensaje);
                         });
 
+                        /**
+                         * Cambiamos de fragmento
+                         * **/
                         CambiarContrasena nextFragment = new CambiarContrasena();
                         getParentFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
@@ -124,7 +180,6 @@ public class ContrasenaOlvidada extends Fragment {
 
             @Override
             public void onFailure(Call<List<String>> call, Throwable t) {
-                // Handle failure (e.g., show a Toast message)
             }
         });
     }

@@ -55,9 +55,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             String categoryName = categoria.getNombre() != null ? categoria.getNombre().trim().toLowerCase() : "";
             String imagePath = categoria.getImagen() != null ? categoria.getImagen() : "";
             categoryImageMap.put(categoryName, imagePath);
-            Log.d(TAG, "Mapped category: " + categoryName + " -> " + imagePath);
         }
-        Log.d(TAG, "categoryImageMap size: " + categoryImageMap.size());
         notifyDataSetChanged();
     }
 
@@ -65,14 +63,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.transaction_item, parent, false);
-        Log.d(TAG, "Inflated transaction_item layout: " + (view != null));
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Transaction transaction = transacciones.get(position);
-        Log.d(TAG, "Binding transaction: tipo=" + transaction.getTipo() + ", monto=" + transaction.getMonto() + ", categoria=" + transaction.getCategoria());
 
         // Bind primary fields
         holder.descripcion.setText(transaction.getCategoria() != null ? transaction.getCategoria() : "Sin categoría");
@@ -91,14 +87,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         } else if (transaction.getTipo() != null && transaction.getTipo().equalsIgnoreCase("Gasto")) {
             holder.monto.setTextColor(ContextCompat.getColor(context, R.color.red));
         } else {
-            Log.w(TAG, "Unknown transaction tipo: " + transaction.getTipo());
             holder.monto.setTextColor(ContextCompat.getColor(context, android.R.color.black));
         }
 
         // Load the image based on the category
         String categoryName = transaction.getCategoria() != null ? transaction.getCategoria().trim().toLowerCase() : "";
         if (categoryName.isEmpty()) {
-            Log.w(TAG, "Transaction has no category: " + transaction.getMonto());
             holder.icon.setImageResource(android.R.drawable.ic_menu_gallery);
         } else {
             String imagePath = categoryImageMap.get(categoryName);
@@ -111,11 +105,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 if (resId != 0) {
                     holder.icon.setImageResource(resId);
                 } else {
-                    Log.w(TAG, "Drawable resource not found for: " + resourceName);
                     holder.icon.setImageResource(android.R.drawable.ic_menu_gallery);
                 }
             } else {
-                Log.w(TAG, "No image path found for category: " + categoryName);
                 holder.icon.setImageResource(android.R.drawable.ic_menu_gallery);
             }
         }
@@ -169,7 +161,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
             fechaChica = itemView.findViewById(R.id.fechaChica);
             tipoChica = itemView.findViewById(R.id.tipoChico);
-            Log.d(TAG, "ViewHolder initialized: icon=" + (icon != null) + ", descripcion=" + (descripcion != null));
         }
     }
 }

@@ -5,6 +5,7 @@ import com.example.weathvision.Api.Class.CategoriaUpdate;
 import com.example.weathvision.Api.Class.CorreoRequest;
 import com.example.weathvision.Api.Class.LoginResponse;
 import com.example.weathvision.Api.Class.Metas;
+import com.example.weathvision.Api.Class.TasaInflacion;
 import com.example.weathvision.Api.Class.Transaction;
 import com.example.weathvision.Api.Class.UsuarioLoginRequest;
 import com.example.weathvision.Api.Class.UsuarioRegisterRequest;
@@ -69,6 +70,12 @@ public interface ApiService {
 
     @GET("usuarios/correos")
     Call<List<String>> obtenerCorreos();
+
+    @GET("usuarios/username")
+    Call<List<String>> obtenerUsername();
+
+    @GET("tasas/tasas")
+    Call<List<TasaInflacion>> obtenerTasas();
 
 
 

@@ -1,60 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    android:orientation="vertical">
+    android:background="@drawable/background">
 
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="left"
+        android:text="Predicciones"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="italic"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/predictionTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView4" />
+
+    <TextView
+        android:id="@+id/predictionTextView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        android:orientation="vertical"
-        android:background="@drawable/edittext_transparent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:elevation="2dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="left"
+        android:padding="16dp"
+        android:layout_margin="15dp"
+        android:text="Ahorro previsto: Aún no calculado"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lineChart" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mis Ahorros"
-            android:layout_margin="20dp"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3450€"
-            android:textColor="@color/white"
-            android:layout_marginStart="20dp"
-            android:textSize="30dp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="^ 4,5%  Ultima semana"
-            android:textColor="@color/white"
-            android:layout_marginStart="20dp"
-            android:textSize="15dp"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"/>
-
-
-    </LinearLayout>
-
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/chart"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/predictButton"
         android:layout_width="match_parent"
-        android:layout_height="269dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="30dp"
-        android:background="@color/grey_trasnparent"
-        android:backgroundTint="@color/grey_trasnparent" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle_button"
+        android:elevation="6dp"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:text="Predecir Ahorros"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/predictionTextView"
+        app:layout_constraintVertical_bias="0.741" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

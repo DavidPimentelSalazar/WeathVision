@@ -9,9 +9,6 @@
     android:padding="16dp"
     tools:context=".LoginActivity">
 
-    <!-- Título de la app -->
-
-    <!-- Mensaje principal -->
 
     <TextView
         android:id="@+id/app_title"
@@ -40,7 +37,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_title" />
 
-    <!-- Campo de correo con margen dinámico -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_input_layout"
         android:layout_width="0dp"
@@ -65,8 +61,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
-    <!-- Información adicional -->
     <TextView
         android:id="@+id/info_text"
         android:layout_width="0dp"

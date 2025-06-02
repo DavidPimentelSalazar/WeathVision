@@ -12,6 +12,11 @@ import com.example.weathvision.R;
 
 public class MainContrasena extends AppCompatActivity {
 
+    /**
+     * Este Main será el principal cuando el usuario quiera cambiar la contraseña, tenemos
+     * este main vacio puesto que se irán cargando los fragmentos seleccionados en el, de esta manera
+     * optimizamos el funcionamiento de la aplicación
+     * **/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

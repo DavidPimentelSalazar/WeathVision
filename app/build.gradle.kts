@@ -38,6 +38,12 @@ android {
 
 dependencies {
 
+    //tensor flow lite
+    implementation ("com.google.ai.edge.litert:litert:1.0.1")
+  //  implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
+
+    //barras
+
     implementation ("com.github.PhilJay:MPAndroidChart:v3.0.3")
 
     //MAIl
