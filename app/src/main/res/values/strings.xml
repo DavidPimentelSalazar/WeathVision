@@ -29,6 +29,12 @@
         <item>Inglés</item>
     </string-array>
 
+        <string-array name="time_periods">
+            <item>Day</item>
+            <item>Month</item>
+            <item>Year</item>
+        </string-array>
+
     <string-array name="categorias_array">
         <item>drawable/salud</item>
         <item>drawable/salud</item>

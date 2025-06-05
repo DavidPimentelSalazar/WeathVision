@@ -2,15 +2,22 @@ package com.example.weathvision.UserNew;
 
 
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.weathvision.R;
+import com.example.weathvision.transactions.MainTransactions;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -20,12 +27,16 @@ import java.util.ArrayList;
 
 public class NameAlertFragment extends Fragment {
 
-    private LineChart lineChart;
-    private LineDataSet lineDataSet;
+    private TextView titulo;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.name_alert_fragment, container, false);
+
         temporizador();
+
+        titulo = view.findViewById(R.id.titulo);
+        titulo.setText("¡Hola!, te recibimos en WealthVision.");
 
         return  view;
     }
@@ -52,11 +63,8 @@ public class NameAlertFragment extends Fragment {
             @Override
             public void onFinish() {
 
-                getParentFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.mainRegister, new NameMeta())
-                        .addToBackStack(null) // Optional: Allows back navigation
-                        .commit();
+                Intent intent = new Intent(getContext(), MainTransactions.class);
+                startActivity(intent);
 
             }
         }.start();

@@ -112,6 +112,7 @@ public class Categorias extends Fragment {
         Intent intent = new Intent (getContext(), NewCategory.class);
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
     }
 
     private void loadCategorias() {
@@ -152,39 +153,6 @@ public class Categorias extends Fragment {
         categoriasAdapter.notifyDataSetChanged();
     }
 
-
-
-    private void showAddCategoryDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Añadir Nueva Categoría");
-
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_category, null);
-        builder.setView(dialogView);
-
-        EditText inputNombre = dialogView.findViewById(R.id.input_nombre);
-        EditText inputImagen = dialogView.findViewById(R.id.input_imagen);
-
-        builder.setPositiveButton("Añadir", (dialog, which) -> {
-            String nombre = inputNombre.getText().toString().trim();
-            String imagen = inputImagen.getText().toString().trim();
-
-            if (nombre.isEmpty()) {
-                Toast.makeText(context, "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Categoria nuevaCategoria = new Categoria();
-            nuevaCategoria.setNombre(nombre);
-            nuevaCategoria.setImagen(imagen.isEmpty() ? "@drawable/ic_default_category" : imagen);
-            nuevaCategoria.setIdUsuario(idUsuario);
-            nuevaCategoria.setMain(false);
-
-            saveCategoria(nuevaCategoria);
-        });
-
-        builder.setNegativeButton("Cancelar", null);
-        builder.show();
-    }
 
     private void saveCategoria(Categoria categoria) {
         Call<Categoria> call = apiService.createCategoria(categoria);

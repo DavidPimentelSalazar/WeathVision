@@ -2,6 +2,7 @@ package Adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +113,13 @@ public class MetasAdapter extends RecyclerView.Adapter<MetasAdapter.MetaViewHold
         TextView diasRestantes = dialogView.findViewById(R.id.dias_restantes);
         ProgressBar progressBar = dialogView.findViewById(R.id.progressBar);
 
+        // Obtener el balance actual desde SharedPreferences
+        SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        double balanceActual = prefs.getFloat("user_balance", 0.0f);
+
+        // Actualizar el monto_actual de la meta
+        meta.setMonto_actual(balanceActual);
+
         /**
          *
          *  Mostramos los datos en las variables para su respectiva visualización.
@@ -119,10 +127,9 @@ public class MetasAdapter extends RecyclerView.Adapter<MetasAdapter.MetaViewHold
          * **/
         title.setText(meta.getTitulo());
         fecha.setText(meta.getFechaLimite());
-        balance.setText( meta.getMonto_actual() + "€");
-        objetivo.setText(meta.getMontoObjetivo() + "€");
+        balance.setText(String.format(Locale.getDefault(), "%.2f€", balanceActual));
+        objetivo.setText(String.format(Locale.getDefault(), "%.2f€", meta.getMontoObjetivo()));
         comentario.setText(meta.getComentario());
-
 
         CalcularDiasRestantes(diasRestantes, meta);
 
@@ -149,7 +156,6 @@ public class MetasAdapter extends RecyclerView.Adapter<MetasAdapter.MetaViewHold
          *
          * **/
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.background_alert);
-
         dialog.show();
     }
 

@@ -32,12 +32,13 @@
             android:textSize="25sp"
             android:textStyle="italic" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <TextView
             android:id="@+id/perfil"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/circulo"
-            android:text="+"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WealthVision"
+            android:textStyle="italic"
+            android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -50,7 +51,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:padding="10dp"
+        android:padding="15dp"
         android:background="@drawable/background_balance"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,68 +68,91 @@
                 android:layout_height="wrap_content"
                 android:text="Balance"
                 android:textColor="@color/white"
-                android:layout_margin="10dp" />
+               />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/grafica"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/circle_button" />
+                android:background="@drawable/piechar" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/patrimonio_actual"
+
+        <TextView
+            android:id="@+id/patrimonio_actual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/white"
+            android:text="€"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:textColor="@color/white"
-                android:text="€"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="20dp"
-                android:src="@drawable/arrow_drop_up" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/arrow_drop_up" />
 
-            <TextView
-                android:id="@+id/ingresos"
+                <TextView
+                    android:id="@+id/ingresos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="€"
+                    android:textColor="@color/green"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/green"
-                android:layout_gravity="center"
-                android:text="€"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
 
-                android:layout_marginStart="20dp"
-                android:src="@drawable/arrow_drop_down" />
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/arrow_drop_down" />
 
-            <TextView
-                android:id="@+id/gastado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/red"
-                android:layout_gravity="center"
-                android:text="€"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/gastado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="€"
+                    android:textColor="@color/red"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.PieChart
+    </LinearLayout>
+
+
+    <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="269dp"
@@ -169,6 +193,19 @@
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/noMetas"
+                android:layout_marginStart="40dp"
+                android:visibility="gone"
+                android:layout_marginEnd="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -190,6 +227,19 @@
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/noTransacciones"
+                android:layout_marginStart="40dp"
+                android:visibility="gone"
+                android:layout_marginEnd="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_transactions"

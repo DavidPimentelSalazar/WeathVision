@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="#FFFFFF" /> <!-- Color de fondo -->
-    <corners android:radius="16dp" /> <!-- Esquinas redondeadas -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-</shape>
+    <!-- Fondo con degradado en tonos morados -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:startColor="#A54CF8"
+                 android:centerColor="#9A7CAF"
+                     android:endColor="#D6A0FF"
+            android:angle="45"/>
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+
+    <!-- Capa superior con transparencia -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#66FFFFFF"/> <!-- Blanco con transparencia -->
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+
+</layer-list>

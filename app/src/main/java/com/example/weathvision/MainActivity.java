@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,8 @@ import com.example.weathvision.Api.ApiService;
 import com.example.weathvision.Api.Class.Categoria;
 import com.example.weathvision.Api.Class.Metas;
 import com.example.weathvision.Api.Class.Transaction;
+import com.example.weathvision.UserNew.NameMeta;
+import com.example.weathvision.contrasena.ContrasenaOlvidada;
 import com.example.weathvision.transactions.MainTransactions;
 import com.example.weathvision.transactions.NewAlert;
 import com.example.weathvision.transactions.NewTransaction;
@@ -60,9 +63,9 @@ public class MainActivity extends Fragment {
     private TransactionAdapter adapter;
     private MetasAdapter metasAdapter;
     private ApiService apiService;
-    private TextView textViewPatrimonio, textViewIngresos, textViewGastado;
+    private TextView textViewPatrimonio, textViewIngresos, textViewGastado,noTransacciones, noMetas;
     private Categoria selectedCategoria;
-    private Button perfil, grafica;
+    private Button  grafica;
     private PieChart pieChart;
     private Context context;
     private TextView nombre;
@@ -76,9 +79,8 @@ public class MainActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_main, container, false);
         context = requireContext();
-
-        perfil = view.findViewById(R.id.perfil);
-        perfil.setOnClickListener(v -> irPerfil());
+        noTransacciones = view.findViewById(R.id.noTransacciones);
+        noMetas = view.findViewById(R.id.noMetas);
 
         grafica = view.findViewById(R.id.grafica);
         grafica.setOnClickListener( v -> mostrarGrafica());
@@ -131,15 +133,28 @@ public class MainActivity extends Fragment {
     }
 
 
-        private void mostrarGrafica() {
-            pieChart.setVisibility(pieChart.getVisibility() == VISIBLE ? GONE : VISIBLE);
+    private void mostrarGrafica() {
+        if (pieChart.getVisibility() == View.VISIBLE) {
+            grafica.setBackground(ContextCompat.getDrawable(grafica.getContext(), R.drawable.piechar));
+                    pieChart.animate()
+                    .alpha(0f)
+                    .setDuration(300) // Duración en milisegundos
+                    .withEndAction(() -> pieChart.setVisibility(View.GONE))
+                    .start();
+        } else {
+            pieChart.setVisibility(View.VISIBLE);
+            grafica.setBackground(ContextCompat.getDrawable(grafica.getContext(), R.drawable.piecharmorado));
+            pieChart.setAlpha(0f);
+            pieChart.animate()
+                    .alpha(1f)
+                    .setDuration(300) // Duración en milisegundos
+                    .start();
         }
-
-
-
-
-    private void irPerfil() {
     }
+
+
+
+
 
     private void mostrarMasBotones(View view) {
         Button btnAddMain = view.findViewById(R.id.btn_add_transaction);
@@ -211,7 +226,6 @@ public class MainActivity extends Fragment {
                     actualizarGrafico();
 
                 } else {
-                    Toast.makeText(context, "No se encontraron categorías", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -232,7 +246,6 @@ public class MainActivity extends Fragment {
                     metas.addAll(response.body());
                     metasAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(context, "No se encontraron metas", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -256,8 +269,26 @@ public class MainActivity extends Fragment {
                     recyclerView.scrollToPosition(0);
                     updateTransactionSums();
                     actualizarGrafico();
+
+                    recyclerView.setVisibility(VISIBLE);
+                    recyclerMetas.setVisibility(VISIBLE);
+                    noTransacciones.setVisibility(View.GONE);
+                    noMetas.setVisibility(GONE);
                 } else {
-                    Toast.makeText(context, "No se encontraron transacciones", Toast.LENGTH_LONG).show();
+                    recyclerView.setVisibility(View.GONE);
+                    noTransacciones.setVisibility(View.VISIBLE);
+                    noTransacciones.setText("Aún no tienes transacciones");
+                    noTransacciones.setPadding(100, 100, 100, 300);
+                    noTransacciones.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittext_transparent));
+                    noTransacciones.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+                    recyclerMetas.setVisibility(GONE);
+                    noMetas.setVisibility(View.VISIBLE);
+                    noMetas.setText("Aún no tienes metas");
+                    noMetas.setPadding(100, 100, 100, 100);
+                    noMetas.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.edittext_transparent));
+                    noMetas.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
                     textViewPatrimonio.setText("0.00€");
                     textViewIngresos.setText("0.00€");
                     textViewGastado.setText("0.00€");
@@ -290,6 +321,12 @@ public class MainActivity extends Fragment {
         textViewPatrimonio.setText(String.format("%.2f€", patrimonio));
         textViewIngresos.setText(String.format("%.2f€", totalIngresos));
         textViewGastado.setText(String.format("%.2f€", totalGastos));
+
+        // Guardar el balance (patrimonio) en SharedPreferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("user_balance", patrimonio);
+        editor.apply();
     }
 
 

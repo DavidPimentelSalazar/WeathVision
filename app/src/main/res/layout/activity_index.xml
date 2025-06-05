@@ -43,7 +43,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Controla Tus Finanzas de manera Eficiente"
+        android:text="Controla Tus Gastos de manera Eficiente"
         android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold"

@@ -12,11 +12,22 @@
     tools:context=".UserNew.StartFragment">
 
     <TextView
+        android:id="@+id/titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Empieza introducciendo alguna meta como objetivo en base a tu patrimonio actual "
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="25dp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Empieza introducciendo alguna transacción y meta como objetivo en base a tu patrimonio actual "
         android:textColor="@color/white"
         android:textSize="25dp"
         android:textStyle="italic" />
@@ -31,6 +42,8 @@
         android:textColor="@color/white"
         android:textSize="15dp"
         android:textStyle="italic" />
+
+
 
 
 </LinearLayout>

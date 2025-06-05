@@ -1,6 +1,8 @@
 package com.example.weathvision.ia;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,7 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
@@ -18,12 +23,16 @@ import com.example.weathvision.Api.ApiService;
 import com.example.weathvision.Api.Class.TasaInflacion;
 import com.example.weathvision.Api.Class.Transaction;
 import com.example.weathvision.R;
-import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +43,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.view.animation.AlphaAnimation;
@@ -55,14 +75,18 @@ public class MainPrediction extends Fragment {
     private Context context;
     private Interpreter tflite;
     private TextView predictionTextView;
-    private Button predictButton;
-    private LineChart lineChart;
+    private MaterialButton predictButton;
+    private MaterialButton graficasButton;
+    private BarChart barChart;
+    private Spinner timePeriodSpinner;
+    private ImageView imageView;
     private boolean transaccionesCargadas = false;
     private boolean tasasCargadas = false;
     private float[] entrada_mean;
     private float[] entrada_std;
     private float[] salida_mean;
     private float[] salida_std;
+    private String selectedTimePeriod = "Month"; // Default to Month
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,38 +95,68 @@ public class MainPrediction extends Fragment {
 
         predictionTextView = view.findViewById(R.id.predictionTextView);
         predictButton = view.findViewById(R.id.predictButton);
-        lineChart = view.findViewById(R.id.lineChart);
+        graficasButton = view.findViewById(R.id.graficas);
+        barChart = view.findViewById(R.id.barChart);
+        imageView = view.findViewById(R.id.imageView);
 
-        /**
-         * Si los datos no se obtuvieron bien, saldrá el boton bloqueado, de esta forma nos aseguramos
-         * que este todo listo para la predicción
-         * **/
+        barChart.setVisibility(GONE);
+
+
+
+
+
+        timePeriodSpinner = view.findViewById(R.id.timePeriodSpinner);
+
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                R.array.time_periods, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timePeriodSpinner.setAdapter(adapter);
+        timePeriodSpinner.setSelection(1);
+        timePeriodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedTimePeriod = parent.getItemAtPosition(position).toString();
+                if (graficasButton.isChecked()) {
+                    updateBarChart();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        // Disable predict button initially
         predictButton.setEnabled(false);
 
-        /**
-         * Damos funcionalidad de click para que empiece la predicción
-         * **/
-        predictButton.setOnClickListener(v -> predictSavings());
+        // Set up toggle group listener
+        MaterialButtonToggleGroup toggleGroup = view.findViewById(R.id.radio_buttons_SiNoNvNp);
+        toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                if (checkedId == R.id.predictButton) {
+                    predictSavings();
+                } else if (checkedId == R.id.graficas) {
+                    updateBarChart();
+                }
+            }
+        });
 
-        /**
-         * Inicializamos la API y los arrays donde se guardaran los datos rescatados.
-         * **/
+        // Initialize API and data lists
         apiService = ApiClient.getClient().create(ApiService.class);
         transacciones = new ArrayList<>();
         tasasInflacion = new ArrayList<>();
 
-        /**
-         * Cargamos los parámetros para normalizar los datos (escaladores) desde un archivo JSON en assets
-         * **/
+        // Load scaler parameters
         try {
             loadScalerParams(context);
         } catch (IOException | JSONException e) {
             Log.e(TAG, "Error cargando parámetros de escalado: " + e.getMessage());
             return view;
         }
-        /**
-         * Cargamos el modelo de TensorFLow Lite desde la carpeta assets
-         * **/
+
+        // Load TensorFlow Lite model
         try {
             tflite = new Interpreter(loadModelFile(context));
         } catch (IOException e) {
@@ -110,19 +164,14 @@ public class MainPrediction extends Fragment {
             return view;
         }
 
-        /**
-         * Obtengo el id del usuario guardado para consultar sus datos.
-         * **/
-
+        // Get user ID
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int idUsuario = sharedPreferences.getInt("id_usuario", -1);
 
-        /**
-         * Llamamos a las metodos para cargar tanto las transacciones del usuario como las tasas previas.
-         * **/
 
         CargarTransacciones(idUsuario);
         CargarTasasInflacion();
+
 
         return view;
     }
@@ -167,7 +216,7 @@ public class MainPrediction extends Fragment {
     private void habilitarSiListos() {
         if (transaccionesCargadas && tasasCargadas) {
             predictButton.setEnabled(true);
-            predictButton.setText("Predict Savings"); // Restaurar texto original
+            predictButton.setText("Predecir");
         }
     }
 
@@ -222,17 +271,19 @@ public class MainPrediction extends Fragment {
     }
 
     private void predictSavings() {
+
         if (transacciones.isEmpty() || tasasInflacion.size() < 5 || tflite == null) {
             predictionTextView.setText("Predicted Savings: Insufficient data");
             predictButton.setEnabled(true);
-            predictButton.setText("Predict Savings");
+            predictButton.setText("Predecir");
+            barChart.setVisibility(GONE);
             return;
         }
 
-        // Mostrar mensaje de "cargando"
+        // Show loading message
         predictionTextView.setText("Calculando predicciones...");
 
-        // Animación de desvanecimiento para el TextView
+        // Fade-in animation
         Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
         fadeIn.setDuration(500);
         predictionTextView.startAnimation(fadeIn);
@@ -259,12 +310,12 @@ public class MainPrediction extends Fragment {
             }
         }
 
-        List<Entry> entries = new ArrayList<>();
+        List<com.github.mikephil.charting.data.Entry> entries = new ArrayList<>();
         int[] horizontes = {1, 5, 10};
         List<String> resultados = new ArrayList<>();
         Handler handler = new Handler(Looper.getMainLooper());
 
-        // Procesar cada predicción con un retraso
+        // Process predictions with delay
         for (int i = 0; i < horizontes.length; i++) {
             int h = horizontes[i];
             float promedioInflacion = 0f;
@@ -289,88 +340,211 @@ public class MainPrediction extends Fragment {
             float prediccion = prediccion_scaled * salida_std[0] + salida_mean[0];
 
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-            int idUsuario = sharedPreferences.getInt("id_usuario", -1);
             String nombreUsuario = sharedPreferences.getString("nombre_usuario", "ValorPorDefecto");
 
-            resultados.add(String.format("para %d años: €%.2f", h, prediccion));
-            entries.add(new Entry(h, prediccion));
+            resultados.add(String.format("- %d años: %.2f €", h, prediccion));
+            entries.add(new com.github.mikephil.charting.data.Entry(h, prediccion));
 
-// Programar la actualización del TextView con retraso
+            // Update TextView with delay
             int finalI = i;
             handler.postDelayed(() -> {
                 StringBuilder resultadosTexto = new StringBuilder();
-
-                // Agregar mensaje inicial con el nombre del usuario
-                resultadosTexto.append(String.format("Las predicciones para %s son:\n", nombreUsuario));
-
+                resultadosTexto.append(String.format("Tus predicciones, %s, son:\n\n", nombreUsuario));
                 for (int j = 0; j <= finalI; j++) {
                     resultadosTexto.append(resultados.get(j)).append("\n");
                 }
-
-                // Agregar mensaje sobre la precisión del modelo
+                predictionTextView.startAnimation(fadeIn);
                 resultadosTexto.append("\nNota: Esta IA está en desarrollo y puede presentar errores en las predicciones. Son estimaciones y no siempre son exactas.");
-
                 predictionTextView.setText(resultadosTexto.toString());
 
-                // Si es la última predicción, actualizar el gráfico y habilitar el botón
+                // Update chart on last prediction
                 if (finalI == horizontes.length - 1) {
-                    updateChart(entries);
+                    updatePredictionChart(entries);
                     predictButton.setEnabled(true);
-                    predictButton.setText("Predict Savings");
+                    predictButton.setText("Predecir");
                 }
-            }, (i + 1) * 1000); // Retraso de 1 segundo por predicción
+            }, (i + 1) * 1000); // 1-second delay per prediction
         }
 
-        Log.d(TAG, "Total ingresos: " + totalIngresos);
-        Log.d(TAG, "Total gastos: " + totalGastos);
-        Log.d(TAG, "Tasas de inflación usadas: " + Arrays.toString(tasas));
     }
 
-    private void updateChart(List<Entry> entries) {
+    private void updatePredictionChart(List<com.github.mikephil.charting.data.Entry> entries) {
+        imageView.setVisibility(GONE);
+        barChart.setVisibility(VISIBLE);
+        timePeriodSpinner.setVisibility(GONE);
+
+        // Convert entries to BarEntry
+        List<BarEntry> barEntries = new ArrayList<>();
+        for (int i = 0; i < entries.size(); i++) {
+            com.github.mikephil.charting.data.Entry entry = entries.get(i);
+            barEntries.add(new BarEntry(entry.getX(), entry.getY()));
+        }
+
         // Configure dataset
-        LineDataSet dataSet = new LineDataSet(entries, "Predicción Ahorros");
+        BarDataSet dataSet = new BarDataSet(barEntries, "Predicción Ahorros");
         dataSet.setColor(getResources().getColor(R.color.violet));
         dataSet.setValueTextColor(getResources().getColor(R.color.white));
-        dataSet.setLineWidth(1.5f); // Reduced for compactness
-        dataSet.setCircleRadius(5f); // Smaller circles
-        dataSet.setCircleColor(getResources().getColor(R.color.violet));
-        dataSet.setDrawValues(true);
-        dataSet.setValueTextSize(10f); // Smaller text size
+        dataSet.setValueTextSize(10f);
 
-        LineData lineData = new LineData(dataSet);
-        lineChart.setData(lineData);
+        BarData barData = new BarData(dataSet);
+        barData.setBarWidth(0.4f); // Set bar width
+
+        barChart.setData(barData);
 
         // Configure X-axis
-        XAxis xAxis = lineChart.getXAxis();
+        XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
-        xAxis.setLabelCount(entries.size(), true); // Match label count to data points
+        xAxis.setLabelCount(barEntries.size(), true);
         xAxis.setValueFormatter((value, axis) -> (int) value + " años");
         xAxis.setTextColor(getResources().getColor(R.color.white));
-        xAxis.setTextSize(10f); // Smaller text size
-        xAxis.setAvoidFirstLastClipping(true); // Prevent label clipping
-        xAxis.setSpaceMin(0.5f); // Add padding to start
-        xAxis.setSpaceMax(0.5f); // Add padding to end
+        xAxis.setTextSize(10f);
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setSpaceMin(0.5f);
+        xAxis.setSpaceMax(0.5f);
 
         // Configure Y-axis
-        YAxis leftAxis = lineChart.getAxisLeft();
+        YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setGranularity(1000f);
         leftAxis.setTextColor(getResources().getColor(R.color.white));
         leftAxis.setValueFormatter((value, axis) -> (int) value + " €");
-        leftAxis.setTextSize(10f); // Smaller text size
-        leftAxis.setSpaceTop(15f); // Add top padding
-        leftAxis.setSpaceBottom(15f); // Add bottom padding
-        YAxis rightAxis = lineChart.getAxisRight();
+        leftAxis.setTextSize(10f);
+        leftAxis.setSpaceTop(15f);
+        leftAxis.setSpaceBottom(15f);
+        YAxis rightAxis = barChart.getAxisRight();
         rightAxis.setEnabled(false);
 
         // Chart settings
-        lineChart.getDescription().setEnabled(false);
-        lineChart.setBackgroundColor(getResources().getColor(R.color.transparente));
-        lineChart.setDrawGridBackground(false);
-        lineChart.setExtraOffsets(5f, 5f, 5f, 5f); // Add margins around chart
-        lineChart.setTouchEnabled(true); // Allow zooming/panning
-        lineChart.setPinchZoom(true); // Enable pinch zoom
-        lineChart.animateY(1000); // Animation
-        lineChart.invalidate(); // Refresh chart
+        barChart.getDescription().setEnabled(false);
+        barChart.setBackgroundColor(getResources().getColor(R.color.transparente));
+        barChart.setDrawGridBackground(false);
+        barChart.setExtraOffsets(5f, 5f, 5f, 5f);
+        barChart.setTouchEnabled(true);
+        barChart.setPinchZoom(true);
+        barChart.animateY(1000);
+        barChart.invalidate();
+    }
+    private void updateBarChart() {
+        imageView.setVisibility(View.GONE);
+        timePeriodSpinner.setVisibility(View.VISIBLE);
+
+        if (transacciones.isEmpty()) {
+            predictionTextView.setText("No hay transacciones para mostrar");
+            barChart.setVisibility(View.GONE);
+            return;
+        }
+
+        barChart.setVisibility(View.VISIBLE);
+
+        // Maps to store incomes and expenses by time period (use Double instead of Float)
+        TreeMap<String, Double> ingresosPorPeriodo = new TreeMap<>();
+        TreeMap<String, Double> gastosPorPeriodo = new TreeMap<>();
+
+        // Date format based on selected time period
+        SimpleDateFormat dateFormat;
+        switch (selectedTimePeriod) {
+            case "Day":
+                dateFormat = new SimpleDateFormat("MM-dd", Locale.getDefault());
+                break;
+            case "Month":
+                dateFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+                break;
+            case "Year":
+                dateFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+                break;
+            default:
+                dateFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+                break;
+        }
+
+        // Group transactions by time period
+        for (Transaction t : transacciones) {
+            try {
+                Date fecha = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(t.getFecha());
+                String key = dateFormat.format(fecha);
+                double monto = t.getMonto(); // Use double here
+
+                if ("Ingreso".equals(t.getTipo())) {
+                    ingresosPorPeriodo.put(key, ingresosPorPeriodo.getOrDefault(key, 0.0) + monto);
+                } else if ("Gasto".equals(t.getTipo())) {
+                    gastosPorPeriodo.put(key, gastosPorPeriodo.getOrDefault(key, 0.0) + monto);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error parsing date: " + t.getFecha(), e);
+            }
+        }
+
+        // Combine keys from both maps to ensure all periods are included
+        Set<String> allPeriods = new TreeSet<>();
+        allPeriods.addAll(ingresosPorPeriodo.keySet());
+        allPeriods.addAll(gastosPorPeriodo.keySet());
+
+        // Prepare bar entries for incomes and expenses
+        List<BarEntry> ingresosEntries = new ArrayList<>();
+        List<BarEntry> gastosEntries = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+        int index = 0;
+
+        for (String period : allPeriods) {
+            labels.add(period);
+            double ingreso = ingresosPorPeriodo.getOrDefault(period, 0.0);
+            double gasto = gastosPorPeriodo.getOrDefault(period, 0.0);
+            ingresosEntries.add(new BarEntry(index, (float) ingreso)); // Cast to float for BarEntry
+            gastosEntries.add(new BarEntry(index + 0.45f, (float) gasto)); // Cast to float for BarEntry
+            index++;
+        }
+
+        // Create datasets for incomes and expenses
+        BarDataSet ingresosDataSet = new BarDataSet(ingresosEntries, "Ingresos");
+        ingresosDataSet.setColor(getResources().getColor(R.color.green));
+        ingresosDataSet.setValueTextColor(getResources().getColor(R.color.white));
+        ingresosDataSet.setValueTextSize(10f);
+
+        BarDataSet gastosDataSet = new BarDataSet(gastosEntries, "Gastos");
+        gastosDataSet.setColor(getResources().getColor(R.color.red));
+        gastosDataSet.setValueTextColor(getResources().getColor(R.color.white));
+        gastosDataSet.setValueTextSize(10f);
+
+        // Combine datasets
+        BarData barData = new BarData(ingresosDataSet, gastosDataSet);
+        barData.setBarWidth(0.45f);
+
+        barChart.setData(barData);
+
+        // Configure X-axis
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setLabelCount(labels.size(), true);
+        xAxis.setValueFormatter((value, axis) -> {
+            int idx = (int) value;
+            return idx < labels.size() ? labels.get(idx) : "";
+        });
+        xAxis.setTextColor(getResources().getColor(R.color.white));
+        xAxis.setTextSize(10f);
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setSpaceMin(0.5f);
+        xAxis.setSpaceMax(0.5f);
+
+        // Configure Y-axis
+        YAxis leftAxis = barChart.getAxisLeft();
+        leftAxis.setGranularity(100f);
+        leftAxis.setTextColor(getResources().getColor(R.color.white));
+        leftAxis.setValueFormatter((value, axis) -> (int) value + " €");
+        leftAxis.setTextSize(10f);
+        leftAxis.setSpaceTop(15f);
+        leftAxis.setSpaceBottom(15f);
+        YAxis rightAxis = barChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        // Chart settings
+        barChart.getDescription().setEnabled(false);
+        barChart.setBackgroundColor(getResources().getColor(R.color.transparente));
+        barChart.setDrawGridBackground(false);
+        barChart.setExtraOffsets(5f, 5f, 5f, 5f);
+        barChart.setTouchEnabled(true);
+        barChart.setPinchZoom(true);
+        barChart.animateY(1000);
+        barChart.invalidate();
     }
 }

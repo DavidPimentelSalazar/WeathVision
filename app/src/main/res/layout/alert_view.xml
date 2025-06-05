@@ -88,8 +88,14 @@
         android:id="@+id/progressBar"
         android:layout_marginTop="20dp"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         tools:progress="50"
+        android:background="@drawable/edittext_transparent"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+
         android:progressTint="@color/violet"
         android:layout_gravity="center"
         android:layout_height="wrap_content" />
@@ -108,11 +114,14 @@
 
     <TextView
         android:id="@+id/dias_restantes"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/black"
         android:text="dias restantes"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/edittext_transparent"
         android:textStyle="bold"
         android:textSize="15sp"
         android:layout_marginTop="20dp"

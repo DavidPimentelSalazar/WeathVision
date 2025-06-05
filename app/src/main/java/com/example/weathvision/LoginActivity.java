@@ -74,6 +74,8 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainContrasena.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        progressBar.setVisibility(GONE);
+
     }
 
     /**
@@ -84,6 +86,8 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        progressBar.setVisibility(GONE);
+
     }
 
     /**

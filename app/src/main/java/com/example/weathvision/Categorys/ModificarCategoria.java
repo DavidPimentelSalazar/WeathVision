@@ -40,6 +40,8 @@ public class ModificarCategoria extends Fragment {
     private int idUsuario;
     private String imagenSeleccionada;
 
+    private Button modificar, eliminar;
+
     public static ModificarCategoria newInstance(Categoria categoria) {
         ModificarCategoria fragment = new ModificarCategoria();
         Bundle args = new Bundle();
@@ -57,7 +59,9 @@ public class ModificarCategoria extends Fragment {
         categoriaList = new ArrayList<>();
 
         EditText nombreEditText = view.findViewById(R.id.nombreIngresado);
-        Button modificarBtn = view.findViewById(R.id.appCompatButton);
+        modificar = view.findViewById(R.id.modificar);
+        eliminar = view.findViewById(R.id.eliminarCategoria);
+        eliminar.setOnClickListener( v -> eliminarCategoria());
         recyclerView = view.findViewById(R.id.recyclerNewCategorias);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
@@ -85,7 +89,7 @@ public class ModificarCategoria extends Fragment {
             imagenSeleccionada = imagen; // ← también inicializamos con la imagen actual
         }
 
-        modificarBtn.setOnClickListener(v -> {
+        modificar.setOnClickListener(v -> {
             String nuevoNombre = nombreEditText.getText().toString().trim();
             if (nuevoNombre.isEmpty()) {
                 Toast.makeText(getContext(), "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
@@ -96,6 +100,27 @@ public class ModificarCategoria extends Fragment {
         });
 
         return view;
+    }
+
+    private void eliminarCategoria() {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<Void> call = apiService.deleteCategoria(categoria.getIdCategoria());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Categoría eliminada con éxito", Toast.LENGTH_SHORT).show();
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    Toast.makeText(getContext(), "Error al eliminar la categoría", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void actualizarCategoria(Categoria categoria) {

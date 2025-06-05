@@ -19,6 +19,7 @@ import com.example.weathvision.Api.ApiClient;
 import com.example.weathvision.Api.ApiService;
 import com.example.weathvision.Api.Class.Categoria;
 import com.example.weathvision.R;
+import com.example.weathvision.UserNew.MetaFinal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +75,7 @@ public class NewCategory extends AppCompatActivity {
         adapter = new CategoriasAdapter(this, categoriaList, new CategoriasAdapter.OnCategoryClickListener() {
             @Override
             public void onCategoryClick(Categoria categoria) {
-                // Marcar la categoría seleccionada
                 categoriaSeleccionada = categoria;
-                Toast.makeText(NewCategory.this, "Categoría seleccionada: " + categoria.getNombre(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -180,14 +179,14 @@ public class NewCategory extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Categoria savedCategoria = response.body();
                     Toast.makeText(NewCategory.this, "Categoría guardada: " + savedCategoria.getNombre(), Toast.LENGTH_SHORT).show();
+                    finish();
+
                 } else {
-                    Toast.makeText(NewCategory.this, "Error al guardar la categoría", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Categoria> call, Throwable t) {
-                Toast.makeText(NewCategory.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

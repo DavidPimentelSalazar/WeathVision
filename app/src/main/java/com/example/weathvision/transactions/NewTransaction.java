@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +30,7 @@ import com.example.weathvision.MainActivity;
 import com.example.weathvision.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.text.SimpleDateFormat;
@@ -36,6 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import Adapters.CategoriasAdapter;
 import retrofit2.Call;
@@ -120,9 +124,40 @@ public class NewTransaction extends Fragment {
     }
 
     private void showDatePicker() {
+        // Obtener la fecha actual en UTC
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long today = calendar.getTimeInMillis(); // Fecha de hoy a medianoche en UTC
+
+        // Configurar restricciones para permitir solo fechas desde el principio hasta hoy
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder()
+                .setEnd(today) // Establece el límite superior en la fecha de hoy
+                .setValidator(new CalendarConstraints.DateValidator() {
+                    @Override
+                    public boolean isValid(long date) {
+                        return date <= today; // Solo permite fechas hasta hoy
+                    }
+
+                    // Necesario para que el objeto sea parcelable
+                    @Override
+                    public int describeContents() {
+                        return 0;
+                    }
+
+                    @Override
+                    public void writeToParcel(@NonNull Parcel parcel, int i) {
+
+                    }
+
+                });
+
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Selecciona fecha")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setSelection(today) // Preselecciona la fecha de hoy
+                .setCalendarConstraints(constraintsBuilder.build()) // Aplicar restricciones
                 .build();
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
@@ -134,6 +169,7 @@ public class NewTransaction extends Fragment {
         datePicker.show(getParentFragmentManager(), "DATE_PICKER");
     }
 
+
     private void cargarCategorias(View view, int idUsuario) {
         RecyclerView recyclerCategorias = view.findViewById(R.id.Categoria);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
@@ -142,7 +178,6 @@ public class NewTransaction extends Fragment {
         List<Categoria> categoriasDialog = new ArrayList<>();
         CategoriasAdapter categoryAdapter = new CategoriasAdapter(context, categoriasDialog, categoria -> {
             selectedCategoria = categoria;
-            Toast.makeText(context, "Selected: " + categoria.getNombre(), Toast.LENGTH_SHORT).show();
         });
         recyclerCategorias.setAdapter(categoryAdapter);
 
@@ -212,8 +247,6 @@ public class NewTransaction extends Fragment {
             @Override
             public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(context, "Transacción guardada: " + tipo + ", Fecha: " + selectedDate, Toast.LENGTH_LONG).show();
-
                    Intent intent = new Intent(getContext(), BarActivity.class);
                    startActivity(intent);
 

@@ -3,6 +3,7 @@ package com.example.weathvision.UserNew;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,189 +14,156 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 
+import com.example.weathvision.Api.ApiClient;
+import com.example.weathvision.Api.ApiService;
+import com.example.weathvision.LoginActivity;
 import com.example.weathvision.R;
+import com.example.weathvision.contrasena.MainContrasena;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Ajustes extends Fragment {
-    private Spinner spinner, spinnerTemporizador;
-    private Switch switcher, switchSystemDarkMode;
-    private boolean nightMODE;
-    private SharedPreferences sharedPreferences;
-    private boolean isUserInteraction = false; // Bandera para detectar interacción del usuario
-    private Button aceptarTemporizador;
+
+    private Button eliminarCuenta, cambiarContrasena;
+    private TextInputEditText confirmacion;
+
+    private TextView nombreUsuario, correoUsuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.ajustes, container, false);
+        View view = inflater.inflate(R.layout.ajustes, container, false);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String nombreUsuarioText = sharedPreferences.getString("nombre_usuario", "ValorPorDefecto");
+
+
+
+        eliminarCuenta = view.findViewById(R.id.eliminarCuenta);
+        eliminarCuenta.setOnClickListener(v -> mostrarAlerta());
+
+
+        cambiarContrasena = view.findViewById(R.id.cambiarContrasena);
+        cambiarContrasena.setOnClickListener(v -> cambiarContrasenaUsuario());
+
+        nombreUsuario = view.findViewById(R.id.nombreUsuario);
+        nombreUsuario.setText(nombreUsuarioText);
+
+        correoUsuario = view.findViewById(R.id.correoUsuario);
+        cargarCorreoUsuario();
+        return view;
+
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    private void cargarCorreoUsuario() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int idUsuario = sharedPreferences.getInt("id_usuario", -1);
 
-        spinner = view.findViewById(R.id.spinner);
-        spinnerTemporizador = view.findViewById(R.id.spinnerTemporizador);
-        switcher = view.findViewById(R.id.switcher);
-        switchSystemDarkMode = view.findViewById(R.id.switchSystemDarkMode);
+        if (idUsuario != -1) {
+            ApiService apiService = ApiClient.getClient().create(ApiService.class);
+            Call<List<String>> call = apiService.obtenerCorreoUsuario(idUsuario);
 
-        aceptarTemporizador = view.findViewById(R.id.aceptarTemporizador);
+            call.enqueue(new Callback<List<String>>() {
+                @Override
+                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                        correoUsuario.setText(response.body().get(0)); // Asigna el correo obtenido al TextView
+                    } else {
+                        correoUsuario.setText("Correo no encontrado");
+                    }
+                }
 
-        traducir();
-
-        modoOscuroSistema();
-        modoOscuro();
-
-        if (switchSystemDarkMode.isChecked()) {
-            switcher.setEnabled(false);
+                @Override
+                public void onFailure(Call<List<String>> call, Throwable t) {
+                    correoUsuario.setText("Error al cargar correo");
+                }
+            });
         } else {
-            switcher.setEnabled(true);
+            correoUsuario.setText("ID de usuario no válido");
         }
+    }
 
+    private void mostrarAlerta() {
+// Inflar la vista del diálogo
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View dialogView = inflater.inflate(R.layout.alert_view_contrasena, null);
 
-        System.out.println("nightMODE al principio: " + nightMODE);
+// Buscar el EditText dentro del dialogView
+        EditText confirmacion = dialogView.findViewById(R.id.confirmacion);
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        builder.setView(dialogView)
+                .setPositiveButton("Cerrar", (d, which) -> d.dismiss()) // "Cerrar" siempre cierra la alerta
+                .setNegativeButton("Eliminar", null); // Se sobrescribirá después de que el diálogo se cree
+
+// Crear y mostrar el diálogo
+        AlertDialog dialog = builder.create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.background_alert);
+        }
+        dialog.show();
+
+// Sobrescribir el botón "Eliminar" para que haga la validación manualmente
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
+            String textoIngresado = confirmacion.getText().toString().trim();
+            if (textoIngresado.equals("ELIMINAR")) {
+                eliminarCuentaUsuario(); // Ejecutar la acción
+                dialog.dismiss(); // Cerrar el diálogo solo si la acción fue exitosa
+            } else {
+                confirmacion.setError("Introduce 'ELIMINAR' para confirmar"); // Mostrar error sin cerrar el diálogo
+            }
+        });
+    }
+
+    private void cambiarContrasenaUsuario() {
+        Intent intent = new Intent(getContext(), MainContrasena.class);
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
     }
 
-    private void traducir() {
-        // Configurar el adaptador del Spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.idiomas,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+    private void eliminarCuentaUsuario() {
 
-        // Cargar la preferencia guardada o usar el idioma del dispositivo como predeterminado
-        SharedPreferences prefs = requireActivity().getPreferences(MODE_PRIVATE);
-        String savedLanguage = prefs.getString("language", Locale.getDefault().getLanguage());
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int idUsuario = sharedPreferences.getInt("id_usuario", -1);
 
-        // Establecer la selección inicial basada en la preferencia guardada (sin disparar el listener)
-        if (savedLanguage.equals("en")) {
-            spinner.setSelection(1, false); // Inglés, sin animación ni disparo del listener
-        } else {
-            spinner.setSelection(0, false); // Español, sin animación ni disparo del listener
-        }
-
-        // Listener para cambios en la selección del Spinner
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<Void> call = apiService.deleteUsuario(idUsuario);
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Solo procesar si es una interacción del usuario
-                if (!isUserInteraction) {
-                    return; // Ignorar si no es una selección manual
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                } else {
                 }
-
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                String languageCode = "";
-
-                // Determinar el código de idioma según la selección
-                if (selectedItem.equals("Inglés") || selectedItem.equals("English")) {
-                    languageCode = "en";
-                } else if (selectedItem.equals("Español") || selectedItem.equals("Espanish")) {
-                    languageCode = "es";
-                }
-
-                // Aplicar el cambio de idioma solo si es diferente al actual
-                if (!Locale.getDefault().getLanguage().equals(languageCode)) {
-                    // Guardar la preferencia de idioma
-                    SharedPreferences prefs = requireActivity().getPreferences(MODE_PRIVATE);
-                    prefs.edit().putString("language", languageCode).apply();
-
-                    // Cambiar el idioma y recrear la actividad
-                    setLanguage(languageCode);
-                    requireActivity().recreate();
-                }
-
-                // Resetear la bandera después de procesar la selección
-                isUserInteraction = false;
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // No hacer nada
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
-        // Detectar interacción del usuario con el Spinner
-        spinner.setOnTouchListener((v, event) -> {
-            isUserInteraction = true; // Marcar como interacción del usuario
-            return false; // Permitir que el evento siga su curso
-        });
     }
 
 
-
-    private void modoOscuroSistema() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MODE", MODE_PRIVATE);
-        boolean sistema = sharedPreferences.getBoolean("sistema", true);
-
-        switchSystemDarkMode.setChecked(sistema);
-        switchSystemDarkMode.setOnClickListener(v -> {
-            // Obtener el estado actual del Switch
-            boolean isSistemadarkMode = switchSystemDarkMode.isChecked();
-
-            // Aplicar el modo oscuro/claro según el estado del Switch
-            if (isSistemadarkMode) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                switcher.setEnabled(false);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                switcher.setEnabled(true);
-            }
-
-            // Guardar el nuevo estado en SharedPreferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("sistema", isSistemadarkMode).apply();
-
-            // Opcional: Recrear la actividad para aplicar el tema inmediatamente
-            getActivity().recreate();
-        });
-    }
-
-    private void modoOscuro() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MODE", MODE_PRIVATE);
-        nightMODE = sharedPreferences.getBoolean("night", false);
-
-        switcher.setChecked(nightMODE);
-        switcher.setOnClickListener(v -> {
-            // Obtener el estado actual del Switch
-            boolean isNightMode = switcher.isChecked();
-
-            // Aplicar el modo oscuro/claro según el estado del Switch
-            if (isNightMode) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
-
-            // Guardar el nuevo estado en SharedPreferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("night", isNightMode).apply();
-
-            // Actualizar la variable local
-            nightMODE = isNightMode;
-
-            // Opcional: Recrear la actividad para aplicar el tema inmediatamente
-            getActivity().recreate();
-        });
-    }
-
-    private void setLanguage(String languageCode) {
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.setLocale(locale);
-        requireContext().getResources().updateConfiguration(config,
-                requireContext().getResources().getDisplayMetrics());
-    }
 }

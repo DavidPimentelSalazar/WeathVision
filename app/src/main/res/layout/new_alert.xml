@@ -147,20 +147,21 @@
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <!-- Calendar Button -->
+
+            <!-- Comment Label -->
             <ImageButton
                 android:id="@+id/calendar"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/white"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/circle_button"
                 android:contentDescription="Seleccionar fecha"
                 android:src="@drawable/calendar"
-                app:layout_constraintTop_toBottomOf="@id/selectedDate"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/radio_buttons_SiNoNvNp"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/selectedDate" />
 
-            <!-- Comment Label -->
             <TextView
                 android:id="@+id/comentario_label"
                 android:layout_width="0dp"

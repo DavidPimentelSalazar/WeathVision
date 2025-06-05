@@ -79,7 +79,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         // Bind details fields
         holder.tipo.setText("Tipo: " + (transaction.getTipo() != null ? transaction.getTipo() : "N/A"));
         holder.descripcionDetails.setText("Descripción: " + (transaction.getDescripcion() != null ? transaction.getDescripcion() : "N/A"));
-        holder.fecha.setText("Fecha: " + (transaction.getFecha() != null ? transaction.getFecha() : "N/A"));
+        holder.fecha.setText("Realizada el día " + (transaction.getFecha() != null ? transaction.getFecha() : "N/A"));
 
         // Set text color based on transaction type
         if (transaction.getTipo() != null && transaction.getTipo().equalsIgnoreCase("Ingreso")) {

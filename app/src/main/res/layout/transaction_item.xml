@@ -58,12 +58,14 @@
             <TextView
                 android:id="@+id/text_monto"
                 android:layout_width="100dp"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:text="0.00€"
                 android:textSize="16sp" />
             <TextView
                 android:id="@+id/tipoChico"
                 android:textColor="@color/white"
+                android:textStyle="bold"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="tipo"
@@ -96,6 +98,16 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/text_fecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:text="Fecha: "
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/text_descripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -105,15 +117,7 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/text_fecha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:text="Fecha: "
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+
 
         <Button
             android:id="@+id/btn_delete"

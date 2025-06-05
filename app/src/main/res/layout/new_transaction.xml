@@ -1,160 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_transaction"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_transaction"
-    android:orientation="vertical"
-    android:padding="10dp"
-    android:background="@drawable/background_2">
+    android:background="@drawable/background_2"
+    android:orientation="vertical">
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:textColor="@color/white"
-        android:text="Euros"/>
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/inputMonto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColorHint="@color/white"
-        android:textColor="@color/white"
-        android:layout_marginStart="150dp"
-        android:layout_marginEnd="150dp"
-        android:inputType="numberDecimal"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categorias"
-        android:textColor="@color/white"
-        android:gravity="left"
-        android:paddingStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/Categoria"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginBottom="16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="horizontal"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="2dp"
+                android:hint="Introduce el dinero"
+                app:boxStrokeColor="@color/outline_text_style"
+                app:cursorColor="@color/white"
+                app:hintTextColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/textView14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fecha:"
-        android:textColor="@color/white"
-        android:gravity="left"
-        android:paddingStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputMonto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:boxBackgroundColor="@color/white_transparent"
+                    app:boxBackgroundMode="filled" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/selectedDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Selecciona una fecha"
-        android:textColor="@color/white"
-        android:gravity="left"
-        android:paddingStart="20dp"
-        android:layout_marginBottom="10dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="33dp"
+                android:gravity="left"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                android:text="Categorias"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/Categoria"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/radio_buttons_SiNoNvNp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:checkedButton="@id/btn_yes">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Categoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_yes"
+                android:background="@drawable/edittext_transparent"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/textView15"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textStyle="bold"
+
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="left"
+                android:paddingStart="20dp"
+                android:text="Fecha:"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/selectedDate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <TextView
+                android:id="@+id/selectedDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="left"
+                android:paddingStart="20dp"
+                android:text="Selecciona una fecha"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="25dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/textView16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/radio_buttons_SiNoNvNp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:checkedButton="@id/btn_yes"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:tag="0"
+                        android:text="Hoy"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:tag="1"
+                        android:text="Ayer"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <ImageButton
+                    android:id="@+id/calendar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/circle_button"
+                    android:contentDescription="Seleccionar fecha"
+                    android:src="@drawable/calendar" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="40dp"
+                android:gravity="left"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                android:text="Escribe un comentario para determinar tu ingreso o gasto."
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/inputDescription"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <EditText
+                android:id="@+id/inputDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="100dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:tag="0"
-                android:text="Hoy"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:tag="1"
-                android:text="Ayer"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/gastar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="40dp"
+                    android:background="@drawable/circle_button"
+                    android:text="Gastar" />
 
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/ingresar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circle_button"
+                    android:text="Ingresar" />
 
-        <ImageButton
-            android:id="@+id/calendar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@color/white"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/calendar"
-            android:contentDescription="Seleccionar fecha"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Comentario:"
-        android:textColor="@color/white"
-        android:gravity="left"
-        android:paddingStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"/>
-
-    <EditText
-        android:id="@+id/inputDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="80dp">
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/gastar"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="@drawable/circle_button"
-            android:layout_gravity="center"
-            android:text="Gastar"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/ingresar"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:background="@drawable/circle_button"
-            android:layout_gravity="center"
-            android:text="Ingresar"/>
-    </LinearLayout>
-</LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

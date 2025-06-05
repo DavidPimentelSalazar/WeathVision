@@ -65,11 +65,22 @@ public interface ApiService {
     @DELETE("transacciones/{idTransaccion}")
     Call<Void> deleteTransaccion(@Path("idTransaccion") int idTransaccion);
 
+    @DELETE("categorias/delete/{idCategoria}")
+    Call<Void> deleteCategoria(@Path("idCategoria") int idCategoria);
+
+
+    @DELETE("/usuarios/delete/{idUsuario}")
+    Call<Void> deleteUsuario(@Path("idUsuario") int idUsuario);
+
     @POST("mail/enviar-correo/")
     Call<Response> enviarCorreo(@Body CorreoRequest request);
 
+    @GET("usuarios/correousuario/{idUsuario}")
+    Call<List<String>> obtenerCorreoUsuario(@Path("idUsuario") int idUsuario);
+
     @GET("usuarios/correos")
     Call<List<String>> obtenerCorreos();
+
 
     @GET("usuarios/username")
     Call<List<String>> obtenerUsername();

@@ -1,10 +1,10 @@
+
 package com.example.weathvision.UserNew;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.weathvision.UserNew.StartFragment;
+
 import com.example.weathvision.R;
 
 public class MainActivityRegister extends AppCompatActivity {

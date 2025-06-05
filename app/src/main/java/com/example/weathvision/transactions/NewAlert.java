@@ -174,7 +174,6 @@ public class NewAlert extends Fragment {
             @Override
             public void onResponse(Call<Metas> call, Response<Metas> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(context, "Meta registrada: " + titulo + ", Fecha: " + selectedDate, Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(getContext(), BarActivity.class);
                     startActivity(intent);
