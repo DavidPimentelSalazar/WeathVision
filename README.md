@@ -24,5 +24,7 @@ ________________________________________________________________________________
 
 ### TODAS LAS IMAGENES EN EL ANEXO DE LA DOCUMENTACIÓN
 
+
+
 <img width="471" height="885" alt="mociç" src="https://github.com/user-attachments/assets/10f34870-dcd6-4824-9962-87237058e54b" />
 <img width="471" height="885" alt="main" src="https://github.com/user-attachments/assets/f35ac0f0-2c9f-451d-9824-6851db8d5da3" />
