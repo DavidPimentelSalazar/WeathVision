@@ -20,11 +20,9 @@ Aquí encontrarás la licencia sobre la aplicación: [LICENCIA DE  APLICACIÓN.p
 ### Contacto
 Para dudas o consultas, me puedes contactar por correo: pimentelsalazardavid@gmail.com.
 
+______________________________________________________________________________________________
 
 ### TODAS LAS IMAGENES EN EL ANEXO DE LA DOCUMENTACIÓN
 
 <img width="471" height="885" alt="mociç" src="https://github.com/user-attachments/assets/10f34870-dcd6-4824-9962-87237058e54b" />
-<img width="471" height="885" alt="iniciose" src="https://github.com/user-attachments/assets/d53b7170-fdfb-4d14-a798-8222d06c4a77" />
 <img width="471" height="885" alt="main" src="https://github.com/user-attachments/assets/f35ac0f0-2c9f-451d-9824-6851db8d5da3" />
-<img width="471" height="885" alt="predicicino" src="https://github.com/user-attachments/assets/d1d70965-b7c1-405b-ac54-ce8a811a6bda" />
-<img width="471" height="885" alt="progreso" src="https://github.com/user-attachments/assets/e809044e-8705-41ca-8aed-6d46142aeeb6" />
