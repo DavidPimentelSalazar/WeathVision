@@ -1,5 +1,5 @@
 # WealthVision
-## Bienvenido/a al repositorio oficial de WeathVision, una aplicación desarrollada por David Pimentel Salazar. 
+## Bienvenido/a al repositorio. 
 
 Aquí encontrarás toda la información necesaria sobre el desarrollo de mi aplicación en tiempo de TFC.
 
@@ -19,3 +19,8 @@ Aquí encontrarás la licencia sobre la aplicación: [LICENCIA DE  APLICACIÓN.p
 
 ### Contacto
 Para dudas o consultas, me puedes contactar por correo: pimentelsalazardavid@gmail.com.
+
+
+<img width="471" height="885" alt="mociç" src="https://github.com/user-attachments/assets/10f34870-dcd6-4824-9962-87237058e54b" />
+<img width="471" height="885" alt="main" src="https://github.com/user-attachments/assets/f35ac0f0-2c9f-451d-9824-6851db8d5da3" />
+<img width="471" height="885" alt="predicicino" src="https://github.com/user-attachments/assets/d1d70965-b7c1-405b-ac54-ce8a811a6bda" />
